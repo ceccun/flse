@@ -1,12 +1,114 @@
 <!doctype html>
 <html>
     <head>
+        <title>FLSE - Fast Layout and Substratum Engine</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     </head>
     <body>
-        <flsemobileonly><p>OK</p></flsemobileonly>
-    <flsemobilehide><p>bye</p></flsemobilehide>
-        <cservice url="https://stella.hs.vc" content="script"></cservice>
+        <flsemobileonly>
+            <div class="contentmob">
+                <div style="margin-left: 5%; margin-right: 5%;">
+                <h1 flsestring="flselong"></h1>
+                <p style="margin-top: 5px;" flsestring="flsemeet"></p>
+                <p  style="margin-top: 10px;"flsestring="flsemeet2"></p>
+                <a href="https://github.com/stel-la/flse" >
+                <button flsestring="getstarted" style="margin-top: 10px;"></button>
+                </a>
+                </div>
+            </div>
+            <div class="contentmob2">
+                <div style="margin-left:5%; margin-right: 5%;">
+                <h1 flsestring="adaptivepages"></h1>
+                <image src="images/insync.svg" style="width: 100%;"></image>
+                <p flsestring="adaptivepagesdesc"></p>
+                <h1 flsestring="multilingual"></h1>
+                <image src="images/multilingual.svg" style="width: 100%;"></image>
+                <p flsestring="multilingualpagesdesc"></p>
+                </div>
+            </div>
+        </flsemobileonly>
+        <flsemobilehide>
+            <div class="contentdes">
+                <div style="margin-left: 5%; margin-right: 5%;">
+                <h1 flsestring="flselong"></h1>
+                <p style="margin-top: 5px;" flsestring="flsemeet"></p>
+                <p  style="margin-top: 10px;"flsestring="flsemeet2"></p>
+                <a href="https://github.com/stel-la/flse" >
+                <button  flsestring="getstarted" style="margin-top: 10px;"></button>
+                </div></a>
+            </div>
+            
+            <div class="contentdes2">
+                <div style="margin-left:5%; margin-right:5%;">
+                <div style="display: flex; justify-content: space-around;">          <div style="width: 300px;"><h1 flsestring="adaptivepages"></h1>
+                <image src="images/insync.svg" style="width: 100%;"></image>
+            <p flsestring="adaptivepagesdesc"></p>
+            </div>
+               <div style="width: 300px;"><h1 flsestring="multilingual"></h1>
+                <image src="images/multilingual.svg" style="width: 100%;"></image>
+            <p flsestring="multilingualpagesdesc"></p>
+            </div>
+                </div>
+                <p></p>
+                </div>
+            </div>
+        </flsemobilehide>
     </body>
-    <script src="flse-production.js"></script>
+    <cservice url="testpage.css" content="theme"></cservice>
+    <script>
+        var flsestrings = {
+            "flselong":{
+                "default": "Fast Layout and Substratum Engine",
+                "ja": "高速レイアウトと基板エンジン",
+                "es": "Mise en page rapide et moteur de substrat",
+                "fr": "Mise en page rapide et moteur de substrat"
+            },
+            "flsemeet":{
+                "default": "Meet FLSE, an easy to use layout management and JS expansion system for your sites.",
+                "ja": "サイト向けの使いやすいレイアウト管理およびJS拡張システムであるFLSEをご紹介します。",
+                "es": "Conozca FLSE, un sistema de expansión JS y administración de diseño fácil de usar para sus sitios.",
+                "fr": "Découvrez FLSE, un système de gestion de mise en page et d'extension JS facile à utiliser pour vos sites."
+            },
+            "flsemeet2":{
+                "default": "It's designed to be quick, simple and easy to use, and fits right into vanilla HTML, JS and CSS.",
+                "ja":"すばやく、シンプルで使いやすいように設計されており、バニラHTML、JS、CSSにぴったり収まります。",
+                "es":"Está diseñado para ser rápido, simple y fácil de usar, y se adapta perfectamente a HTML, JS y CSS vanilla.",
+                "fr": "Il est conçu pour être rapide, simple et facile à utiliser et s'intègre parfaitement dans le HTML, le JS et le CSS."
+            },
+            "getstarted":{
+                "default":"Get Started",
+                "ja":"始めましょう",
+                "es":"Empezar",
+                "fr":"Commencer"
+            },
+            "adaptivepages":{
+                "default": "Adaptive Pages",
+                "ja": "アダプティブページ",
+                "es": "Páginas adaptables",
+                "fr":"Pages adaptatives"
+            },
+            "adaptivepagesdesc":{
+                "default":"Let your pages adapt on their own with the help of FLSE, to bring better UX and UI in one page for both small and large screens.",
+                "ja":"FLSEを使用してページを独自に適応させ、小さな画面と大きな画面の両方で1ページに優れたUXとUIをもたらします。",
+                "es":"Deje que sus páginas se adapten por sí solas con la ayuda de FLSE, para brindar una mejor UX y UI en una página tanto para pantallas pequeñas como grandes.",
+                "fr":"Laissez vos pages s'adapter d'elles-mêmes avec l'aide de FLSE, pour apporter une meilleure UX et UI en une seule page pour les petits et grands écrans."
+            },
+            "multilingual":{
+                "default": "Multilingual Pages",
+                "ja": "多言語ページ",
+                "es": "Páginas multilingües",
+                "fr":"Pages multilingues"
+            },
+            "multilingualpagesdesc":{
+                "default":"Easily add multiple languages to your pages, without the need of creating multiple pages or maintaining a version for each language.",
+                "ja": "複数のページを作成したり、言語ごとにバージョンを維持したりすることなく、ページに複数の言語を簡単に追加できます。",
+                "es":"Agregue fácilmente varios idiomas a sus páginas, sin la necesidad de crear varias páginas o mantener una versión para cada idioma.",
+                "fr":"Ajoutez facilement plusieurs langues à vos pages, sans avoir besoin de créer plusieurs pages ou de maintenir une version pour chaque langue."
+            }
+        }
+    </script>
+    <script src="flse-0.1.js"></script>
 </html>
