@@ -4,7 +4,7 @@
 * Saving Developers Time and Effort
 * Open Sourced Web Development ♥ */
 
-var settings = {};var gvar = {};var editedelems = {};var registered={};var flsedetec={"v":"1.0.2","release":"prod"}
+var settings = {};var gvar = {};var editedelems = {};var registered={};window["flsedetec"]={"v":"1.0.2","release":"prod"}
 setTimeout(bootstrapFLSE(), 0);
 
 function bootstrapFLSE(){
@@ -122,4 +122,5 @@ function rePositionPage(){
         try{ flseLoadcall() }catch(error){}
         settings["firstInitOc"] = 1;
     }
+	try{ flseUpdate() }catch(error){}
 }
