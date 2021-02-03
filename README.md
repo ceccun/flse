@@ -8,5 +8,6 @@ Get Started by adding this to the bottom of your HTML document.
     <script src="https://cdn.jsdelivr.net/gh/stel-la/flse@1.0/flse-1.0.min.js"></script>
 Then you can use `<flsemobilehide>` to hide objects on mobile and `<flsemobileonly>` to show objects on mobile only.
 ### Adding locally
-Download the latest release of FLSE and link it as a script in your HTML document. (Better instructions soon)
+Download the latest release of FLSE and place it somewhere such as /js/flse and link it as a script in your HTML document. In this case we stored FLSE at /js/flse/flse.js, our script would look like this: <script src="/js/flse/flse.js"></script> 
+
 Head over to the Wiki to learn about more features.
