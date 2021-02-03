@@ -12,4 +12,5 @@ Download the latest release of FLSE and place it somewhere such as /js/flse and 
 ```
 <script src="/js/flse/flse.js"></script> 
 ```
+Please note that storing FLSE locally means you won't always have the latest version and therefore features, so we recommend you update your FLSE file every so often.
 Head over to the Wiki to learn about more features.
