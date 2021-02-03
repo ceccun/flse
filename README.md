@@ -3,6 +3,7 @@ Live Demo: [FLSE](https://stella.hs.vc/flse/testpage.html)
 
 ## Getting Started
 **Should I add FLSE remotely or download it locally?**
+
 There are both benefits and downsides to grabbing FLSE remotely and downloading it to your server.
 
 Reasons to add remotely:
