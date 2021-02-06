@@ -55,16 +55,23 @@ function refreshFLSESettings(){
                 }
             }
               }
-            custcomponents.forEach((item, index)=>{
-                var invcomponents = document.getElementsByTagName(item["tag"]);
-                for(const invitem of invcomponents){
-                    console.log(invitem);
-                    console.log(item);
-                    var doc = new DOMParser().parseFromString(item["value"], "text/xml");
-                    console.log(doc);
-                    invitem.outerHTML = item["value"];
+            /* Actually putting custom components on page */
+            var allelements = document.getElementsByTagName("*");
+            for (const elems of allelements){
+                custcomponents.forEach((item,index)=>{
+                    console.log(elems.tagName);
+                    if (elems.tagName == item["tag"].toUpperCase()){
+                        elems.outerHTML = item["value"];
                     }
-            });
+                });
+            }
+            // custcomponents.forEach((item, index)=>{
+            //     var invcomponents = document.getElementsByTagName(item["tag"]);
+            //     console.log(invcomponents);
+            //     for(const invitem of invcomponents){
+            //         invitem.outerHTML = item["value"];
+            //         }
+            // });
     /* Components */
           var components = document.getElementsByTagName("flsehtmlcomponent");
       for(const item of components){
