@@ -1,10 +1,10 @@
 /* Fast Layout and Substratum Engine
 * Developed by Ejaz Ali @ Stella Group
-* Version 1.0.2
+* Version 1.5
 * Saving Developers Time and Effort
 * Open Sourced Web Development ♥ */
 
-var settings = {};var gvar = {};var editedelems = {};var registered={};window["flsedetec"]={"v":"1.0.2","release":"prod"}
+var settings = {};var gvar = {};var editedelems = {};var registered={};window["flsedetec"]={"v":"1.5","release":"prod"};var custcomponents = [];
 setTimeout(bootstrapFLSE(), 0);
 
 function bootstrapFLSE(){
@@ -21,6 +21,7 @@ function bootstrapFLSE(){
 
 function checkPage(){
     if (gvar["pagecontents"] != document.getElementsByTagName("html")[0].innerHTML){
+        console.log("page changed!!!!!")
         refreshFLSESettings();
     }
     if (gvar["width"] != window.innerWidth){
@@ -31,11 +32,67 @@ function checkPage(){
 }
 
 function refreshFLSESettings(){
+    /* Native Components */
+              var components = document.getElementsByTagName("flseimport");
+              for(const item of components){
+                  if(item.getAttribute("registered") == null){
+                  item.setAttribute("registered", "registering");
+                  if(item.getAttribute("type") == "components"){
+                  fetch(item.getAttribute("src")).then((response)=>{
+                      if(response.status.toString().startsWith("2")){
+                          response.json().then((components)=>{
+                            // components.forEach((item, index)=>{
+                                // custcomponents.push(item);
+                            // })
+                            custcomponents = custcomponents.concat(components)
+                            console.log(custcomponents);
+                            item.setAttribute("registered", "");
+                          })
+                      }else{
+                          console.error("FLSE: Could not set up import \"" + item.getAttribute("src") + "\: The source file came back as a " + response.status + ".");
+                      }
+                  });
+                }
+            }
+              }
+            custcomponents.forEach((item, index)=>{
+                var invcomponents = document.getElementsByTagName(item["tag"]);
+                for(const invitem of invcomponents){
+                    console.log(invitem);
+                    console.log(item);
+                    var doc = new DOMParser().parseFromString(item["value"], "text/xml");
+                    console.log(doc);
+                    invitem.outerHTML = item["value"];
+                    }
+            });
+    /* Components */
+          var components = document.getElementsByTagName("flsehtmlcomponent");
+      for(const item of components){
+          if (item.getAttribute("registered") == null){
+              item.setAttribute("registered", "registering");
+              fetch(item.getAttribute("src")).then((response)=>{ 
+                  if(response.status.toString().startsWith("2")){
+                      response.text().then((text)=>{ 
+                          item.insertAdjacentHTML('beforeend', text);
+                          item.setAttribute("registered", "");
+                        })
+                    }else{
+                        console.error("FLSE: Could not load HTMLComponent \"" + item.getAttribute("src") + "\: The result came back as a " + response.status + " but the component was registered anyways.");
+                        item.setAttribute("registered", "error");
+                    }
+                });
+          }
+      }
+      
+    /* Locales */
     if (document.getElementsByTagName('locale')[0] != undefined){
         settings["locale"] = document.getElementsByTagName('locale')[0].getAttribute("value");
     } else{
         settings["locale"] = navigator.language;
     }
+
+    
+    /* CServices */
     var target = document.getElementsByTagName('publicFLSE')[0];
     var cservices = document.getElementsByTagName("cservice");
     for (const item of cservices) {
@@ -58,6 +115,8 @@ function refreshFLSESettings(){
             }
         }
       }
+
+      /* Locale Handler */
       var customstringelements = document.querySelectorAll("[flsestring]");
       var language = settings["locale"].split("-")[0];
       var languagewlocale = settings["locale"];
@@ -78,12 +137,6 @@ function refreshFLSESettings(){
             console.error("FLSE: \"" + item.getAttribute("flsestring") + "\" or \"" + language + "\" and \"default\" is not defined.");
         }
       });
-      var components = document.getElementsByTagName("flsehtmlcomponent");
-      for(const item of components){
-          if (item.getAttribute("registered") == null){
-              fetch(item.getAttribute("src")).then((response)=>{ if(response.status.toString().startsWith("2")){ response.text().then((text)=>{ item.insertAdjacentHTML('beforeend', text); item.setAttribute("registered", ""); })}else{console.error("FLSE: Could not load HTMLComponent \"" + item.getAttribute("src") + "\: The result came back as a " + response.status);}});
-          }
-      }
       rePositionPage();
 }
 
