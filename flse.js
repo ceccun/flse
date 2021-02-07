@@ -21,7 +21,6 @@ function bootstrapFLSE(){
 
 function checkPage(){
     if (gvar["pagecontents"] != document.getElementsByTagName("html")[0].innerHTML){
-        console.log("page changed!!!!!")
         refreshFLSESettings();
     }
     if (gvar["width"] != window.innerWidth){
@@ -50,8 +49,25 @@ function refreshFLSESettings(){
                           })
                       }else{
                           console.error("FLSE: Could not set up import \"" + item.getAttribute("src") + "\: The source file came back as a " + response.status + ".");
+                          item.setAttribute("registered", "fail");
                       }
                   });
+                }
+                if(item.getAttribute("type") == "component"){
+                    fetch(item.getAttribute("src")).then((response)=>{
+                        response.text().then((component)=>{
+                            if (item.getAttribute("name") != null){
+                            custcomponents.push({
+                                "tag": item.getAttribute("name"),
+                                "value": component
+                            });
+                            item.setAttribute("registered", "");
+                        } else{
+                            console.error("FLSE: Could not set up import \"" + item.getAttribute("src") + "\": No name was specified, nor did the source file define them.");
+                            item.setAttribute("registered","fail");
+                        }
+                        })
+                    })
                 }
             }
               }
@@ -59,7 +75,6 @@ function refreshFLSESettings(){
             var allelements = document.getElementsByTagName("*");
             for (const elems of allelements){
                 custcomponents.forEach((item,index)=>{
-                    console.log(elems.tagName);
                     if (elems.tagName == item["tag"].toUpperCase()){
                         elems.outerHTML = item["value"];
                     }
@@ -82,6 +97,7 @@ function refreshFLSESettings(){
                       response.text().then((text)=>{ 
                           item.insertAdjacentHTML('beforeend', text);
                           item.setAttribute("registered", "");
+                          console.warn("FLSE: flsehtmlcomponent is being deprecated in favour of FLSE import and FLSE custom tags. flsehtmlcomponent is less stable, slower and not as advanced as FLSE import and FLSE custom tags.")
                         })
                     }else{
                         console.error("FLSE: Could not load HTMLComponent \"" + item.getAttribute("src") + "\: The result came back as a " + response.status + " but the component was registered anyways.");
