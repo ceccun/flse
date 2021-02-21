@@ -1,5 +1,5 @@
 # FLSE
-Live Demo: [FLSE](https://stella.hs.vc/flse/testpage.html)
+Live Demo: [FLSE](https://stella.hs.vc/ejaz)
 
 ## Getting Started
 **Should I add FLSE remotely or download it locally?**
