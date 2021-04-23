@@ -1,10 +1,11 @@
 /* Fast Layout and Substratum Engine
 * Developed by Ejaz Ali @ Stella Group
-* Version 1.5
+* Version 1.5.3
 * Saving Developers Time and Effort
 * Open Sourced Web Development ♥ */
 
-var settings = {};var gvar = {};var editedelems = {};var registered={};window["flsedetec"]={"v":"1.5","release":"prod"};var custcomponents = [];
+var settings = {};var gvar = {};var editedelems = {};var registered={};window["flsedetec"]={"v":"1.5.3"};var custcomponents = [];
+setTimeout(rePositionPage(), 0);
 setTimeout(bootstrapFLSE(), 0);
 
 function bootstrapFLSE(){
@@ -14,7 +15,7 @@ function bootstrapFLSE(){
     document.body.appendChild(flseworkarea);
     var publicflseworkarea = document.createElement('publicFLSE');
     document.body.appendChild(publicflseworkarea);
-    setTimeout(function (){ window.setInterval(checkPage, 50)}, 1);
+    setTimeout(function (){ window.setInterval(checkPage, 10)}, 1);
 }
 
 
@@ -37,14 +38,13 @@ function refreshFLSESettings(){
                   if(item.getAttribute("registered") == null){
                   item.setAttribute("registered", "registering");
                   if(item.getAttribute("type") == "components"){
-                  fetch(item.getAttribute("src")).then((response)=>{
+                  fetch(item.getAttribute("src"), { importance: "high" }).then((response)=>{
                       if(response.status.toString().startsWith("2")){
                           response.json().then((components)=>{
                             // components.forEach((item, index)=>{
                                 // custcomponents.push(item);
                             // })
                             custcomponents = custcomponents.concat(components)
-                            console.log(custcomponents);
                             item.setAttribute("registered", "");
                           })
                       }else{
@@ -54,7 +54,7 @@ function refreshFLSESettings(){
                   });
                 }
                 if(item.getAttribute("type") == "component"){
-                    fetch(item.getAttribute("src")).then((response)=>{
+                    fetch(item.getAttribute("src"), { importance: "high" }).then((response)=>{
                         response.text().then((component)=>{
                             if (item.getAttribute("name") != null){
                             custcomponents.push({
