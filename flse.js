@@ -1,10 +1,10 @@
 /* Fast Layout and Substratum Engine
 * Developed by Ejaz Ali @ Stella Group
-* Version 1.5.3
+* Version 1.6 LTS
 * Saving Developers Time and Effort
 * Open Sourced Web Development ♥ */
 
-var settings = {};var gvar = {};var editedelems = {};var registered={};window["flsedetec"]={"v":"1.5.3"};var custcomponents = [];
+var settings = {};var gvar = {};var editedelems = {};var slaps = {};var registered={};window["flsedetec"]={"v":"1.6 LTS"};var custcomponents = [];var importNames = []; var modules = [];var flseModules = {}
 setTimeout(rePositionPage(), 0);
 setTimeout(bootstrapFLSE(), 0);
 
@@ -37,9 +37,10 @@ function refreshFLSESettings(){
               for(const item of components){
                   if(item.getAttribute("registered") == null){
                   item.setAttribute("registered", "registering");
+                  importNames.push(item.getAttribute("name").toUpperCase());
                   if(item.getAttribute("type") == "components"){
                   fetch(item.getAttribute("src"), { importance: "high" }).then((response)=>{
-                      if(response.status.toString().startsWith("2")){
+                      if(response.status == 200){
                           response.json().then((components)=>{
                             // components.forEach((item, index)=>{
                                 // custcomponents.push(item);
@@ -55,31 +56,96 @@ function refreshFLSESettings(){
                 }
                 if(item.getAttribute("type") == "component"){
                     fetch(item.getAttribute("src"), { importance: "high" }).then((response)=>{
-                        response.text().then((component)=>{
-                            if (item.getAttribute("name") != null){
-                            custcomponents.push({
-                                "tag": item.getAttribute("name"),
-                                "value": component
-                            });
-                            item.setAttribute("registered", "");
-                        } else{
-                            console.error("FLSE: Could not set up import \"" + item.getAttribute("src") + "\": No name was specified, nor did the source file define them.");
-                            item.setAttribute("registered","fail");
+                        if(response.status == 200){
+                            response.text().then((component)=>{
+                                if (item.getAttribute("name") != null){
+                                custcomponents.push({
+                                    "tag": item.getAttribute("name"),
+                                    "value": component
+                                });
+                                item.setAttribute("registered", "");
+                            } else{
+                                console.error("FLSE: Could not set up import \"" + item.getAttribute("src") + "\": No name was specified, nor did the source file define them.");
+                                item.setAttribute("registered","fail");
+                            }
+                            })
+                        } else { 
+                            console.error("FLSE: Could not set up import \"" + item.getAttribute("src") + "\: The source file came back as a " + response.status + ".");
+                            item.setAttribute("registered", "fail");
                         }
-                        })
+
                     })
                 }
-            }
+                // if (item.getAttribute("type") == "slap") {
+                //     fetch(item.getAttribute("src"), { importance: "high" }
+                //     ).then((response)=>{
+                //         if(response.status.toString().startsWith("2")){
+                //             try { response.json().then((slap) => {
+                //                 slaps[item.getAttribute("name")] = slap;
+                //             });
+                //          } catch(error) {
+                //              console.error(`FLSE: Could not parse "${item.getAttribute("src")}".`)
+                //          }
+                //         } else {
+                //             console.error("FLSE: Could not set up import \"" + item.getAttribute("src") + "\": Returned a " + response.status + ".");
+                //             item.setAttribute("registered","fail");
+                //         }
+                //     })
+                // }
+                if (item.getAttribute("type") == "module") {
+                    fetch(item.getAttribute("src"), { importance: "high" }).then((response) => {
+                        if (response.status == 200) {
+                            response.text().then((moduledata) => {
+                                checkModule(moduledata, item.getAttribute("name"));
+                                // var moduleElem = document.createElement("script");
+                                flseModules[item.getAttribute("name")] = new Function("element", moduledata);
+                                modules.push(item.getAttribute("name"));
+                                item.setAttribute("registered", "");
+                            });
+                        } else {
+                            console.error("FLSE: Could not set up import \"" + item.getAttribute("src") + "\: The source file came back as a " + response.status + ".");
+                            item.setAttribute("registered", "fail");
+                        }
+                    });
+                }
+
+
               }
             /* Actually putting custom components on page */
             var allelements = document.getElementsByTagName("*");
-            for (const elems of allelements){
-                custcomponents.forEach((item,index)=>{
+            setTimeout(() => {
+                for (const elems of allelements){
+                    if (elems in importNames) {
+                        elems.setAttribute("style", "display: none;");
+                    }
+                setTimeout(() => {
+                    custcomponents.forEach((item,index)=>{
                     if (elems.tagName == item["tag"].toUpperCase()){
                         elems.outerHTML = item["value"];
                     }
                 });
+            }, 0);
+
+                setTimeout(() => {
+                    modules.forEach((item, index) => {
+                        // console.log(elems.tagName);
+                        if (elems.tagName == item.toUpperCase()) {
+                            // console.log(elementAttributes);
+                            elems.outerHTML = flseModules[item](elems);
+                        }
+                    });
+                }, 0);
             }
+        }, 0);
+
+            function getAttributes (el) {
+                return Array.from(el.attributes)
+                    .map(a => [a.name, a.value])
+                    .reduce((acc, attr) => {
+                    acc[attr[0]] = attr[1]
+                        return acc
+            }, {})
+        }
             // custcomponents.forEach((item, index)=>{
             //     var invcomponents = document.getElementsByTagName(item["tag"]);
             //     console.log(invcomponents);
@@ -97,7 +163,7 @@ function refreshFLSESettings(){
                       response.text().then((text)=>{ 
                           item.insertAdjacentHTML('beforeend', text);
                           item.setAttribute("registered", "");
-                          console.warn("FLSE: flsehtmlcomponent is being deprecated in favour of FLSE import and FLSE custom tags. flsehtmlcomponent is less stable, slower and not as advanced as FLSE import and FLSE custom tags.")
+                          console.warn("FLSE: flsehtmlcomponent is being deprecated in favour of FLSE import and FLSE custom tags. flsehtmlcomponent is less stable, slower and not as advanced as FLSE import and FLSE custom tags.");
                         })
                     }else{
                         console.error("FLSE: Could not load HTMLComponent \"" + item.getAttribute("src") + "\: The result came back as a " + response.status + " but the component was registered anyways.");
@@ -143,7 +209,7 @@ function refreshFLSESettings(){
       var customstringelements = document.querySelectorAll("[flsestring]");
       var language = settings["locale"].split("-")[0];
       var languagewlocale = settings["locale"];
-      customstringelements.forEach(function (item, index){
+      customstringelements.forEach((item, index) => {
           var stlf = item.getAttribute("flsestring");
           try{
           if (flsestrings != undefined){
@@ -160,7 +226,17 @@ function refreshFLSESettings(){
             console.error("FLSE: \"" + item.getAttribute("flsestring") + "\" or \"" + language + "\" and \"default\" is not defined.");
         }
       });
+
+      /* Slap Handler */
+    //   var slappableElements = document.querySelectorAll("[flseslap]");
+    //   slappableElements.forEach((item, index) => {
+    //       var slapAttr = item.getAttribute("flseslap");
+    //       console.log(slapAttr.split('{=>}'));
+    //       console.log(slaps[slapAttr.replace('{=>}','.')]);
+    //   });
+
       rePositionPage();
+}
 }
 
 function rePositionPage(){
@@ -200,3 +276,33 @@ function rePositionPage(){
     }
 	try{ flseUpdate() }catch(error){}
 }
+
+const flseErrorHandler = (error, severity) => {
+    // Nothing here for now
+}
+
+const flseStringsNSettingsHandler = (element) => {
+
+}
+
+const checkModule = (moduleData, moduleName) => {
+    var safe = 1;
+    const dataLower = moduleData.toLowerCase();
+    if (dataLower.includes("eval")) {
+        console.warn(`FLSE: The module "${moduleName}" may contain potentially harmful code that may pose security risks to this page and any data transferred between it.`);
+        safe = 0;
+    }
+    if (dataLower.includes("document.getelementbyid") || dataLower.includes("document.getelementsbyclassname")) {
+         console.warn(`FLSE: The module "${moduleName}" contains a direct reference to an element that could potentially be used to phish data from this page.`);
+         safe = 0;
+    }
+    if (dataLower.includes("fetch") || dataLower.includes("xmlhttprequest")) {
+        console.warn(`FLSE: The module "${moduleName}" may make requests to external sources, which could be used to phish data outbound this page.`);
+        safe = 0; 
+    }
+
+    if (safe == 0) {
+        console.error("FLSE: There are critical messages being displayed in the Warnings log.");
+    }
+}
+
