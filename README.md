@@ -1,3 +1,6 @@
+# BEWARE
+> This is the Edge channel for FLSE, meaning updates are pushed out instantly without testing or incomplete. We do not recommend using this version for production, and only recommend using it for testing experiments. To go to the Stable channel, switch to the primary brach: https://github.com/stel-la/flse
+
 # FLSE
 Live Demo: [FLSE](https://stella.hs.vc/ejaz)
 
@@ -19,7 +22,7 @@ Because of the two very different situations, we recommend you pick option would
 ### Adding remotely
 Get Started by adding this to the bottom of your HTML document.
 
-    <script src="https://cdn.jsdelivr.net/gh/stel-la/flse/flse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/stel-la/flse@edge/flse.min.js"></script>
 
 This is the production version of FLSE, in most cases it is fine for development, however if you do need to edit the engine directly, you may need to use the local approach.
 Then you can use `<flsemobilehide>` to hide objects on mobile and `<flsemobileonly>` to show objects on mobile only.
