@@ -1,10 +1,10 @@
 /* Fast Layout and Substratum Engine
 * Developed by Ejaz Ali @ Stella Group
-* Version 1.6 LTS
+* Version 1.6.0.1 Edge
 * Saving Developers Time and Effort
 * Open Sourced Web Development ♥ */
 
-var settings = {};var gvar = {};var editedelems = {};var slaps = {};var registered={};window["flsedetec"]={"v":"1.6 LTS"};var custcomponents = [];var importNames = []; var modules = [];var flseModules = {}
+var settings = {};var gvar = {};var editedelems = {};var slaps = {};var registered={};window["flsedetec"]={"v":"1.6.0.1", "channel":"edge"};var custcomponents = [];var importNames = []; var modules = [];var flseModules = {}
 setTimeout(rePositionPage(), 0);
 setTimeout(bootstrapFLSE(), 0);
 
