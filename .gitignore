@@ -1,1 +1,7 @@
-index.html
+*
+!.gitignore
+!flse.js
+!flse.lts.js
+!flse.css
+!LICENSE
+!README.md
