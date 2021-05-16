@@ -292,8 +292,12 @@ const checkModule = (moduleData, moduleName) => {
         console.warn(`FLSE: The module "${moduleName}" may contain potentially harmful code that may pose security risks to this page and any data transferred between it.`);
         safe = 0;
     }
-    if (dataLower.includes("document.getelementbyid") || dataLower.includes("document.getelementsbyclassname")) {
-         console.warn(`FLSE: The module "${moduleName}" contains a direct reference to an element that could potentially be used to phish data from this page.`);
+    if (dataLower.includes(".getelementbyid") || dataLower.includes(".getelementsbyclassname") || dataLower.includes(".getelementsbytagname")) {
+         console.warn(`FLSE: The module "${moduleName}" contains a direct reference to an element that could potentially be used to phish data outbound this page.`);
+         safe = 0;
+    }
+     if ((dataLower.includes("script") && dataLower.includes("createElement")) || dataLower.includes("<script>") || dataLower.includes("</script>")) {
+         console.warn(`FLSE: The module "${moduleName}" contains an injection to inline or external scripts that could be used to potentially phish data outbound this page.`);
          safe = 0;
     }
     if (dataLower.includes("fetch") || dataLower.includes("xmlhttprequest")) {
@@ -305,4 +309,3 @@ const checkModule = (moduleData, moduleName) => {
         console.error("FLSE: There are critical messages being displayed in the Warnings log.");
     }
 }
-
