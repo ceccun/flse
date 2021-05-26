@@ -131,7 +131,9 @@ function refreshFLSESettings(){
                         // console.log(elems.tagName);
                         if (elems.tagName == item.toUpperCase()) {
                             // console.log(elementAttributes);
-                            elems.outerHTML = flseModules[item](elems);
+                            try { elems.outerHTML = flseModules[item](elems); } catch(error) {
+                                console.error(`FLSE: An error occured internally with the module "${item}"; see below: \n\n ${error}`)
+                            }
                         }
                     });
                 }, 0);
