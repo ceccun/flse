@@ -1,17 +1,23 @@
 /* Fast Layout and Substratum Engine
 * Developed by Ejaz Ali @ Stella Group
-* Version 1.6 LTS
+* Version 1.6.0.5 Stable
 * Saving Developers Time and Effort
 * Open Sourced Web Development ♥ */
 
-var settings = {};var gvar = {};var editedelems = {};var slaps = {};var registered={};window["flsedetec"]={"v":"1.6 LTS"};var custcomponents = [];var importNames = []; var modules = [];var flseModules = {}
+var settings = {};var gvar = {};var editedelems = {};var slaps = {};var registered={};window["flsedetec"]={"v":"1.6.0.5", "channel":"stable"};var custcomponents = [];var importNames = []; var modules = [];var flseModules = {}
 setTimeout(rePositionPage(), 0);
 setTimeout(bootstrapFLSE(), 0);
 
 function bootstrapFLSE(){
     settings["firstInitOc"] = 0;
     var flseworkarea = document.createElement('FLSE');
-    flseworkarea.innerHTML = "<link href='https://stella.hs.vc/flse/flse.css' rel='stylesheet'/>";
+    flseworkarea.innerHTML = `
+        <style>
+        publicflse, flse, cservice, locale{
+            display: none;
+        }
+        </style>
+    `;
     document.body.appendChild(flseworkarea);
     var publicflseworkarea = document.createElement('publicFLSE');
     document.body.appendChild(publicflseworkarea);
@@ -110,7 +116,7 @@ function refreshFLSESettings(){
                 }
 
 
-              }
+              }}
             /* Actually putting custom components on page */
             var allelements = document.getElementsByTagName("*");
             setTimeout(() => {
@@ -131,7 +137,9 @@ function refreshFLSESettings(){
                         // console.log(elems.tagName);
                         if (elems.tagName == item.toUpperCase()) {
                             // console.log(elementAttributes);
-                            elems.outerHTML = flseModules[item](elems);
+                            try { elems.outerHTML = flseModules[item](elems); } catch(error) {
+                                console.error(`FLSE: An error occured internally with the module "${item}"; see below: \n\n ${error}`)
+                            }
                         }
                     });
                 }, 0);
@@ -174,6 +182,7 @@ function refreshFLSESettings(){
       }
       
     /* Locales */
+    
     if (document.getElementsByTagName('locale')[0] != undefined){
         settings["locale"] = document.getElementsByTagName('locale')[0].getAttribute("value");
     } else{
@@ -237,7 +246,7 @@ function refreshFLSESettings(){
 
       rePositionPage();
 }
-}
+
 
 function rePositionPage(){
     gvar["mobile"] = Math.min(window.innerWidth, window.innerWidth) < 768;
@@ -292,8 +301,12 @@ const checkModule = (moduleData, moduleName) => {
         console.warn(`FLSE: The module "${moduleName}" may contain potentially harmful code that may pose security risks to this page and any data transferred between it.`);
         safe = 0;
     }
-    if (dataLower.includes("document.getelementbyid") || dataLower.includes("document.getelementsbyclassname")) {
-         console.warn(`FLSE: The module "${moduleName}" contains a direct reference to an element that could potentially be used to phish data from this page.`);
+    if (dataLower.includes(".getelementbyid") || dataLower.includes(".getelementsbyclassname") || dataLower.includes(".getelementsbytagname")) {
+         console.warn(`FLSE: The module "${moduleName}" contains a direct reference to an element that could potentially be used to phish data outbound this page.`);
+         safe = 0;
+    }
+     if ((dataLower.includes("script") && dataLower.includes("createElement")) || dataLower.includes("<script>") || dataLower.includes("</script>")) {
+         console.warn(`FLSE: The module "${moduleName}" contains an injection to inline or external scripts that could be used to potentially phish data outbound this page.`);
          safe = 0;
     }
     if (dataLower.includes("fetch") || dataLower.includes("xmlhttprequest")) {
@@ -305,4 +318,3 @@ const checkModule = (moduleData, moduleName) => {
         console.error("FLSE: There are critical messages being displayed in the Warnings log.");
     }
 }
-
