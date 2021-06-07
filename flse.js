@@ -1,17 +1,23 @@
 /* Fast Layout and Substratum Engine
 * Developed by Ejaz Ali @ Stella Group
-* Version 1.6.0.1 Edge
+* Version 1.6.0.5 Edge
 * Saving Developers Time and Effort
 * Open Sourced Web Development ♥ */
 
-var settings = {};var gvar = {};var editedelems = {};var slaps = {};var registered={};window["flsedetec"]={"v":"1.6.0.1", "channel":"edge"};var custcomponents = [];var importNames = []; var modules = [];var flseModules = {}
+var settings = {};var gvar = {};var editedelems = {};var slaps = {};var registered={};window["flsedetec"]={"v":"1.6.0.5", "channel":"edge"};var custcomponents = [];var importNames = []; var modules = [];var flseModules = {}
 setTimeout(rePositionPage(), 0);
 setTimeout(bootstrapFLSE(), 0);
 
 function bootstrapFLSE(){
     settings["firstInitOc"] = 0;
     var flseworkarea = document.createElement('FLSE');
-    flseworkarea.innerHTML = "<link href='https://stella.hs.vc/flse/flse.css' rel='stylesheet'/>";
+    flseworkarea.innerHTML = `
+        <style>
+        publicflse, flse, cservice, locale{
+            display: none;
+        }
+        </style>
+    `;
     document.body.appendChild(flseworkarea);
     var publicflseworkarea = document.createElement('publicFLSE');
     document.body.appendChild(publicflseworkarea);
@@ -110,7 +116,7 @@ function refreshFLSESettings(){
                 }
 
 
-              }
+              }}
             /* Actually putting custom components on page */
             var allelements = document.getElementsByTagName("*");
             setTimeout(() => {
@@ -176,6 +182,7 @@ function refreshFLSESettings(){
       }
       
     /* Locales */
+    
     if (document.getElementsByTagName('locale')[0] != undefined){
         settings["locale"] = document.getElementsByTagName('locale')[0].getAttribute("value");
     } else{
@@ -239,7 +246,7 @@ function refreshFLSESettings(){
 
       rePositionPage();
 }
-}
+
 
 function rePositionPage(){
     gvar["mobile"] = Math.min(window.innerWidth, window.innerWidth) < 768;
