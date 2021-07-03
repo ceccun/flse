@@ -1,5 +1,5 @@
 /* Fast Layout and Substratum Engine
-* Developed by Ejaz Ali @ Ceccun
+* Developed by Ejaz Ali @ Stella Group
 * Version 1.6.0.7 Edge
 * Saving Developers Time and Effort
 * Open Sourced Web Development ♥ */
@@ -15,16 +15,12 @@ var importNames = [];
 var modules = [];
 var flseModules = {};
 var flseLS = window.localStorage;
-var flseCache = flseLS.getItem("_flseCache");
+var cache = flseLS.getItem("_flseCache")
 if (flseLS.getItem("_flseCache") == null) {
     flseLS.setItem("_flseCache", JSON.stringify({
 
-    }));
-    flseCache = {};
-} else {
-    flseCache = JSON.parse(flseCache)
+    }))
 }
-
 setTimeout(rePositionPage(), 0);
 setTimeout(bootstrapFLSE(), 0);
 
@@ -61,65 +57,38 @@ function refreshFLSESettings(){
     /* Native Components */
               var components = document.getElementsByTagName("flseimport");
               for(const item of components){
-                  var flseTagID = btoa(Math.random().toString());
-                  var flseTemp = {}
-                  item.setAttribute("identity", flseTagID);
                   if(item.getAttribute("registered") == null){
                   item.setAttribute("registered", "registering");
                   importNames.push(item.getAttribute("name").toUpperCase());
                   if(item.getAttribute("type") == "components"){
-                        fetch(item.getAttribute("src"), { importance: "high" }).then((response)=>{
-                            if(response.status == 200){
-                                response.json().then((components)=>{
-                                    // components.forEach((item, index)=>{
-                                        // custcomponents.push(item);
-                                    // })
-                                    custcomponents = custcomponents.concat(components)
-                                    item.setAttribute("registered", "");
-                                })
-                            }else{
-                                console.error("FLSE: Could not set up import \"" + item.getAttribute("src") + "\: The source file came back as a " + response.status + ".");
-                                item.setAttribute("registered", "fail");
-                            }
-                        });
+                  fetch(item.getAttribute("src"), { importance: "high" }).then((response)=>{
+                      if(response.status == 200){
+                          response.json().then((components)=>{
+                            // components.forEach((item, index)=>{
+                                // custcomponents.push(item);
+                            // })
+                            custcomponents = custcomponents.concat(components)
+                            item.setAttribute("registered", "");
+                          })
+                      }else{
+                          console.error("FLSE: Could not set up import \"" + item.getAttribute("src") + "\: The source file came back as a " + response.status + ".");
+                          item.setAttribute("registered", "fail");
+                      }
+                  });
                 }
                 if(item.getAttribute("type") == "component"){
-                    flseTemp[flseTagID + "_flseMethod"] = null
-                    if (item.getAttribute("name") == null) {
-                        console.error("FLSE: Could not set up import \"" + item.getAttribute("src") + "\": No name was specified, nor did the source file define them.");
-                        item.setAttribute("registered","fail");
-                        flseTemp[flseTagID + "_flseMethod"] = "fail";
-                    }
-                    if (item.getAttribute("src") in flseCache){
-                        if (flseTemp[flseTagID + "_flseMethod"] == null) {
-                            if (item.getAttribute("name") != null){
-                                custcomponents.push({
-                                    "tag": item.getAttribute("name"),
-                                    "value": flseCache[item.getAttribute("src")]
-                                });
-                                item.setAttribute("registered", "");
-                                flseTemp[flseTagID + "_flseMethod"] = "cache";
-                                console.log(`FLSE: Imported "${item.getAttribute("name")}" from FLSE Cache.`)
-                            }
-                        }
-                    }
-
                     fetch(item.getAttribute("src"), { importance: "high" }).then((response)=>{
                         if(response.status == 200){
                             response.text().then((component)=>{
-                            if (item.getAttribute("name") != null){
-                                if (flseTemp[flseTagID + "_flseMethod"] == null) {
-                                    console.log(flseTemp[flseTagID + "_flseMethod"])
-                                    custcomponents.push({
-                                        "tag": item.getAttribute("name"),
-                                        "value": component
-                                    });
-                                    item.setAttribute("registered", "");
-                                    flseTemp[flseTagID + "_flseMethod"]  = "fetch";
-                                }
-                                console.log(flseTemp[flseTagID + "_flseMethod"] );
-                                flseCache[item.getAttribute("src")] = component;
-                                flseLS.setItem("_flseCache", JSON.stringify(flseCache));
+                                if (item.getAttribute("name") != null){
+                                custcomponents.push({
+                                    "tag": item.getAttribute("name"),
+                                    "value": component
+                                });
+                                item.setAttribute("registered", "");
+                            } else{
+                                console.error("FLSE: Could not set up import \"" + item.getAttribute("src") + "\": No name was specified, nor did the source file define them.");
+                                item.setAttribute("registered","fail");
                             }
                             })
                         } else { 
@@ -127,7 +96,7 @@ function refreshFLSESettings(){
                             item.setAttribute("registered", "fail");
                         }
 
-                    });
+                    })
                 }
                 // if (item.getAttribute("type") == "slap") {
                 //     fetch(item.getAttribute("src"), { importance: "high" }
@@ -146,37 +115,14 @@ function refreshFLSESettings(){
                 //     })
                 // }
                 if (item.getAttribute("type") == "module") {
-                    flseTemp[flseTagID + "_flseMethod"] = null;
-                    if (item.getAttribute("name") == null) {
-                        console.error("FLSE: Could not set up import \"" + item.getAttribute("src") + "\": No name was specified, nor did the source file define them.");
-                        item.setAttribute("registered","fail");
-                        flseTemp[flseTagID + "_flseMethod"] = "fail";
-                    }
-                    if (item.getAttribute("src") in flseCache){
-                        if (flseTemp[flseTagID + "_flseMethod"] == null) {
-                                checkModule(flseCache[item.getAttribute("src")], item.getAttribute("name"));
-                                // var moduleElem = document.createElement("script");
-                                flseModules[item.getAttribute("name")] = new Function("element", flseCache[item.getAttribute("src")]);
-                                modules.push(item.getAttribute("name"));
-
-                                item.setAttribute("registered", "");
-                                flseTemp[flseTagID + "_flseMethod"] = "cache";
-                                console.log(`FLSE: Imported "${item.getAttribute("name")}" from FLSE Cache.`);
-                        }
-                    }
                     fetch(item.getAttribute("src"), { importance: "high" }).then((response) => {
                         if (response.status == 200) {
                             response.text().then((moduledata) => {
-                                if (flseTemp[flseTagID + "_flseMethod"] == null){
                                 checkModule(moduledata, item.getAttribute("name"));
                                 // var moduleElem = document.createElement("script");
                                 flseModules[item.getAttribute("name")] = new Function("element", moduledata);
                                 modules.push(item.getAttribute("name"));
                                 item.setAttribute("registered", "");
-                                flseTemp[flseTagID + "_flseMethod"] = "fetch";
-                                }
-                                flseCache[item.getAttribute("src")] = moduledata;
-                                flseLS.setItem("_flseCache", JSON.stringify(flseCache));
                             });
                         } else {
                             console.error("FLSE: Could not set up import \"" + item.getAttribute("src") + "\: The source file came back as a " + response.status + ".");
@@ -387,28 +333,4 @@ const checkModule = (moduleData, moduleName) => {
     if (safe == 0) {
         console.error("FLSE: There are critical messages being displayed in the Warnings log.");
     }
-}
-
-
-function FLSEsetCookie(name,value,days) {
-    var expires = "";
-    if (days) {
-        var date = new Date();
-        date.setTime(date.getTime() + (days*24*60*60*1000));
-        expires = "; expires=" + date.toUTCString();
-    }
-    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
-}
-function FLSEgetCookie(name) {
-    var nameEQ = name + "=";
-    var ca = document.cookie.split(';');
-    for(var i=0;i < ca.length;i++) {
-        var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1,c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-    }
-    return null;
-}
-function eraseCookie(name) {   
-    document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 }
