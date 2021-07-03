@@ -17,6 +17,11 @@ function bootstrapFLSE(){
             display: none;
         }
         </style>
+        <style class="flseLoading">
+        html, body {
+            display: none !important;
+        }
+        </style>
     `;
     document.body.appendChild(flseworkarea);
     var publicflseworkarea = document.createElement('publicFLSE');
@@ -119,15 +124,28 @@ function refreshFLSESettings(){
               }}
             /* Actually putting custom components on page */
             var allelements = document.getElementsByTagName("*");
+            var elementsnstatus = {
+                "max": 0,
+                "current": 0
+            }
+            for (const elements of allelements) {
+                // console.log((elements in importNames));
+                if (importNames.includes(elements.tagName)) {
+                    elementsnstatus["max"] += 1
+                    console.log(elementsnstatus["max"]);
+                }
+            }
             setTimeout(() => {
-                for (const elems of allelements){
-                    if (elems in importNames) {
+                for (const elems of allelements) {
+                    if (elems.tagName in importNames) {
                         elems.setAttribute("style", "display: none;");
+                        elementsnstatus["current"] += 1
                     }
                 setTimeout(() => {
                     custcomponents.forEach((item,index)=>{
                     if (elems.tagName == item["tag"].toUpperCase()){
                         elems.outerHTML = item["value"];
+                        elementsnstatus["current"] += 1
                     }
                 });
             }, 0);
@@ -137,14 +155,23 @@ function refreshFLSESettings(){
                         // console.log(elems.tagName);
                         if (elems.tagName == item.toUpperCase()) {
                             // console.log(elementAttributes);
-                            try { elems.outerHTML = flseModules[item](elems); } catch(error) {
+                            try { elems.outerHTML = flseModules[item](elems);
+                            elementsnstatus["current"] += 1
+                            } catch(error) {
                                 console.error(`FLSE: An error occured internally with the module "${item}"; see below: \n\n ${error}`)
-                            }
+                                }
                         }
                     });
                 }, 0);
             }
         }, 0);
+
+        var statusSetter = setInterval(() => {
+            if (elementsnstatus["current"] == elementsnstatus["current"]) {
+                try { document.getElementsByClassName("flseLoading")[0].remove(); } catch (error) {}
+                clearInterval(statusSetter);
+            }
+        }, 500)
 
             function getAttributes (el) {
                 return Array.from(el.attributes)
