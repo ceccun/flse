@@ -171,7 +171,7 @@ function refreshFLSESettings(){
                 try { document.getElementsByClassName("flseLoading")[0].remove(); } catch (error) {}
                 clearInterval(statusSetter);
             }
-        }, 500)
+        }, 10)
 
             function getAttributes (el) {
                 return Array.from(el.attributes)
