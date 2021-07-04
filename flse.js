@@ -1,6 +1,6 @@
 /* Fast Layout and Substratum Engine
 * Developed by Ejaz Ali @ Stella Group
-* Version 1.6.0.5 Edge
+* Version 1.6.0.6 Edge
 * Saving Developers Time and Effort
 * Open Sourced Web Development ♥ */
 
@@ -45,12 +45,18 @@ function checkPage(){
 function refreshFLSESettings(){
     /* Native Components */
               var components = document.getElementsByTagName("flseimport");
+              var componentsStatus = {
+                  "max": components.length,
+                  "current": 0
+              }
+              console.log(components.length)
               for(const item of components){
                   if(item.getAttribute("registered") == null){
                   item.setAttribute("registered", "registering");
                   importNames.push(item.getAttribute("name").toUpperCase());
                   if(item.getAttribute("type") == "components"){
                   fetch(item.getAttribute("src"), { importance: "high" }).then((response)=>{
+                      componentsStatus["current"] += 1;
                       if(response.status == 200){
                           response.json().then((components)=>{
                             // components.forEach((item, index)=>{
@@ -67,6 +73,7 @@ function refreshFLSESettings(){
                 }
                 if(item.getAttribute("type") == "component"){
                     fetch(item.getAttribute("src"), { importance: "high" }).then((response)=>{
+                        componentsStatus["current"] += 1;
                         if(response.status == 200){
                             response.text().then((component)=>{
                                 if (item.getAttribute("name") != null){
@@ -105,6 +112,7 @@ function refreshFLSESettings(){
                 // }
                 if (item.getAttribute("type") == "module") {
                     fetch(item.getAttribute("src"), { importance: "high" }).then((response) => {
+                        componentsStatus["current"] += 1;
                         if (response.status == 200) {
                             response.text().then((moduledata) => {
                                 checkModule(moduledata, item.getAttribute("name"));
@@ -132,7 +140,7 @@ function refreshFLSESettings(){
                 // console.log((elements in importNames));
                 if (importNames.includes(elements.tagName)) {
                     elementsnstatus["max"] += 1
-                    console.log(elementsnstatus["max"]);
+                    // console.log(elementsnstatus["max"]);
                 }
             }
             setTimeout(() => {
@@ -167,7 +175,7 @@ function refreshFLSESettings(){
         }, 0);
 
         var statusSetter = setInterval(() => {
-            if (elementsnstatus["current"] == elementsnstatus["current"]) {
+            if ((elementsnstatus["current"] == elementsnstatus["current"]) && (componentsStatus["current"] == componentsStatus["current"])) {
                 try { document.getElementsByClassName("flseLoading")[0].remove(); } catch (error) {}
                 clearInterval(statusSetter);
             }
