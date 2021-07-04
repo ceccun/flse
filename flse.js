@@ -175,7 +175,8 @@ function refreshFLSESettings(){
         }, 0);
 
         var statusSetter = setInterval(() => {
-            if ((elementsnstatus["current"] == elementsnstatus["current"]) && (componentsStatus["current"] == componentsStatus["current"])) {
+            if ((elementsnstatus["current"] == elementsnstatus["max"]) && (componentsStatus["current"] == componentsStatus["max"])) {
+                console.log(componentsStatus["current"], )
                 try { document.getElementsByClassName("flseLoading")[0].remove(); } catch (error) {}
                 clearInterval(statusSetter);
             }
