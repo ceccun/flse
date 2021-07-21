@@ -7,10 +7,19 @@ Edge Channel
 const flsedetec = { v: "2", channel: "edge" };
 const settings = {};
 var imports = {};
-var flsestrings = {};
+try {
+  flsestrings;
+} catch (error) {
+  var flsestrings = {};
+}
 flseBootstrap();
 
 function flseBootstrap() {
+  settings["longLan"] = navigator.language.replace("-", "_");
+  if (settings["longLan"].includes("_")) {
+    settings["shortLan"];
+  }
+
   const bodyRemovalCSS = document.createElement("style");
   bodyRemovalCSS.innerHTML = `
         body, flseimport, flsedefine {
@@ -19,6 +28,7 @@ function flseBootstrap() {
         `;
   bodyRemovalCSS.setAttribute("id", "flseBodyDry");
   document.body.appendChild(bodyRemovalCSS);
+  settings["cssVar"] = true;
   gatherImports(1);
 }
 
@@ -43,17 +53,20 @@ function gatherImports(ft = 0) {
       const name = importDec.getAttribute("name");
       const src = importDec.getAttribute("src");
       importDec.setAttribute("ranID", importID);
+      importDec.setAttribute("registered", "registering");
 
       if (type == null) {
         console.error(
           `FLSE: The import for "${importID}" could not be completed.\nThere is no type.`
         );
+        importDec.setAttribute("registered", "failed");
         continue;
       }
       if (src == null) {
         console.error(
           `FLSE: The import for "${importID}" could not be completed.\nThere is no source location.`
         );
+        importDec.setAttribute("registered", "failed");
         continue;
       }
 
@@ -66,12 +79,45 @@ function gatherImports(ft = 0) {
                 type: type,
                 contents: data,
               };
+              importDec.setAttribute("registered", "registered");
               incrementGotCounter(ft);
             });
           } else {
             console.error(
               `FLSE: The import for "${importID}" could not be completed.\nThe server responded with ${statusCode}.`
             );
+            importDec.setAttribute("registered", "failed");
+          }
+        });
+      }
+
+      if (type == "components") {
+        fetch(src).then((response) => {
+          var statusCode = response.status.toString();
+          if (statusCode.startsWith("2")) {
+            response.text().then((data) => {
+              try {
+                var dataParsed = JSON.parse(data);
+                for (const arrElement of dataParsed) {
+                  imports[arrElement["tag"]] = {
+                    type: "component",
+                    contents: arrElement["value"],
+                  };
+                }
+                importDec.setAttribute("registered", "registered");
+              } catch (error) {
+                importDec.setAttribute("registered", "failed");
+                console.error(
+                  `FLSE: The import for "${importID}" could not be completed.\nThe source file is not encoded correctly.`
+                );
+              }
+              incrementGotCounter(ft);
+            });
+          } else {
+            console.error(
+              `FLSE: The import for "${importID}" could not be completed.\nThe server responded with ${statusCode}.`
+            );
+            importDec.setAttribute("registered", "failed");
           }
         });
       }
@@ -85,12 +131,14 @@ function gatherImports(ft = 0) {
                 type: type,
                 contents: new Function("element", data),
               };
+              importDec.setAttribute("registered", "registered");
               incrementGotCounter(ft);
             });
           } else {
             console.error(
               `FLSE: The import for "${importID}" could not be completed.\nThe server responded with ${statusCode}.`
             );
+            importDec.setAttribute("registered", "failed");
           }
         });
       }
@@ -114,6 +162,7 @@ function gatherImports(ft = 0) {
         console.error(
           `FLSE: The import for "${importID}" could not be completed.\nThere is no type.`
         );
+        importDec.setAttribute("registered", "failed");
         continue;
       }
 
@@ -122,6 +171,7 @@ function gatherImports(ft = 0) {
           type: type,
           contents: importDec.innerHTML,
         };
+        importDec.setAttribute("registered", "registered");
         incrementGotCounter(ft);
       }
 
@@ -130,25 +180,37 @@ function gatherImports(ft = 0) {
           type: type,
           contents: new Function("element", importDec.innerText),
         };
+        importDec.setAttribute("registered", "registered");
         incrementGotCounter(ft);
       }
     }
   }
+
+  if (window["importStats"]["max"] == 0 || ft == 0) {
+    incrementGotCounter(ft, false);
+  }
 }
 
-function incrementGotCounter(ft = 0) {
-  window["importStats"]["current"] += 1;
-  console.log(window["importStats"]);
-  if (window["importStats"]["current"] == window["importStats"]["max"]) {
+function incrementGotCounter(ft = 0, increment = true) {
+  if (increment == true) {
+    window["importStats"]["current"] += 1;
+  }
+
+  if (
+    window["importStats"]["current"] == window["importStats"]["max"] ||
+    ft == 0
+  ) {
     placeElems(ft);
   }
 }
+
+function placeLang() {}
 
 function placeElems(ft = 0) {
   var everyElem = document.getElementsByTagName("*");
   window["everyElemStats"] = {
     max: everyElem.length,
-    current: 1,
+    current: 0,
   };
 
   for (const elem of everyElem) {
@@ -157,21 +219,53 @@ function placeElems(ft = 0) {
       if (imports[tagName]["type"] == "module") {
         elem.outerHTML = imports[tagName]["contents"](elem);
       }
+      if (imports[tagName]["type"] == "component") {
+        elem.outerHTML = imports[tagName]["contents"];
+      }
     }
-    incrementElemCounter(ft);
+    if (settings["cssVar"] == true) {
+      incrementElemCounter(1);
+    } else {
+      incrementElemCounter(ft);
+    }
+  }
+  if (window["everyElemStats"]["max"] == 0) {
+    incrementElemCounter(ft, false);
   }
 }
 
-function incrementElemCounter(ft = 0) {
-  window["everyElemStats"]["current"] += 1;
-  console.log(window["everyElemStats"]);
-  if (window["everyElemStats"]["current"] == window["everyElemStats"]["max"]) {
+function incrementElemCounter(ft = 0, increment = true) {
+  if (increment == true) {
+    window["everyElemStats"]["current"] += 1;
+  }
+  // console.log(window["everyElemStats"]);
+  if (
+    window["everyElemStats"]["current"] == window["everyElemStats"]["max"] ||
+    ft == 0
+  ) {
     if (ft == 1) {
       document.getElementById("flseBodyDry").innerHTML = `
       flseimport, flsedefine {
         display: none;
       }
-    `;
+      `;
+      addTriggers(ft);
     }
   }
+}
+
+function addTriggers(ft) {
+  settings["cssVar"] = false;
+  setInterval(() => {
+    if (ft == 1) {
+      settings["lastHTML"] = document.body.innerHTML;
+      ft = 0;
+    } else {
+      if (settings["lastHTML"] != document.body.innerHTML) {
+        gatherImports(0);
+        console.log("JHDIOH");
+      }
+      settings["lastHTML"] = document.body.innerHTML;
+    }
+  }, 10);
 }
