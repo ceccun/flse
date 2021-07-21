@@ -17,7 +17,7 @@ flseBootstrap();
 function flseBootstrap() {
   settings["longLan"] = navigator.language.replace("-", "_");
   if (settings["longLan"].includes("_")) {
-    settings["shortLan"];
+    settings["shortLan"] = settings["longLan"].split("_")[0];
   }
 
   const bodyRemovalCSS = document.createElement("style");
@@ -200,11 +200,34 @@ function incrementGotCounter(ft = 0, increment = true) {
     window["importStats"]["current"] == window["importStats"]["max"] ||
     ft == 0
   ) {
-    placeElems(ft);
+    languages(ft);
   }
 }
 
 function placeLang() {}
+
+function languages(ft = 0) {
+  var legacyLanElem = document.querySelectorAll("[flsestring]");
+  for (const item of legacyLanElem) {
+    var targetLan = item.getAttribute("flsestring");
+    if (item.getAttribute("registered") != "registered") {
+      item.setAttribute("registered", "registered");
+      if (flsestrings[targetLan]["default"] != null) {
+        item.innerHTML = flsestrings[targetLan]["default"];
+      }
+      if (flsestrings[targetLan][settings["longLan"]] != null) {
+        item.innerHTML = flsestrings[targetLan][settings["longLan"]];
+      }
+      if (settings["shortLan"] != null) {
+        if (flsestrings[targetLan][settings["shortLan"]] != null) {
+          item.innerHTML = flsestrings[targetLan][settings["shortLan"]];
+        }
+      }
+    }
+  }
+
+  placeElems(ft);
+}
 
 function placeElems(ft = 0) {
   var everyElem = document.getElementsByTagName("*");
@@ -247,6 +270,8 @@ function incrementElemCounter(ft = 0, increment = true) {
       document.getElementById("flseBodyDry").innerHTML = `
       flseimport, flsedefine {
         display: none;
+        transition: none;
+        animation: none;
       }
       `;
       addTriggers(ft);
