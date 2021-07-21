@@ -146,14 +146,14 @@ function refreshFLSESettings(){
             setTimeout(() => {
                 for (const elems of allelements) {
                     if (elems.tagName in importNames) {
-                        elems.setAttribute("style", "display: none;");
                         elementsnstatus["current"] += 1
+                        elems.setAttribute("style", "display: none;");
                     }
                 setTimeout(() => {
                     custcomponents.forEach((item,index)=>{
                     if (elems.tagName == item["tag"].toUpperCase()){
-                        elems.outerHTML = item["value"];
                         elementsnstatus["current"] += 1
+                        elems.outerHTML = item["value"];
                     }
                 });
             }, 0);
@@ -174,10 +174,19 @@ function refreshFLSESettings(){
             }
         }, 0);
 
+        var statusofai = {
+            "fetch": 0,
+            "int": 0
+        };
         var statusSetter = setInterval(() => {
-            if ((elementsnstatus["current"] == elementsnstatus["max"]) && (componentsStatus["current"] == componentsStatus["max"])) {
-                console.log(componentsStatus["current"], )
-                try { document.getElementsByClassName("flseLoading")[0].remove(); } catch (error) {}
+            if ((elementsnstatus["current"] == elementsnstatus["max"])) {
+                statusofai["int"] = 1
+            }
+            if ((componentsStatus["current"] == componentsStatus["max"])) {
+                statusofai["fetch"] = 1
+            }
+            if (statusofai["fetch"] == statusofai["int"]) {
+                try { document.getElementsByClassName("flseLoading")[0].remove(); }catch(error){}
                 clearInterval(statusSetter);
             }
         }, 10)
