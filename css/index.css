@@ -43,6 +43,7 @@
   .ball-element-hero {
     opacity: 0;
     animation: slideInBall 0.4s ease forwards;
+    -webkit-animation: slideInBall 0.4s ease forwards;
     animation-delay: 0.7s;
   }
   .caro-flex {
@@ -76,14 +77,45 @@
     line-height: 55px;
     opacity: 0;
     animation: slideIn 0.25s ease forwards;
+    -webkit-animation: slideIn 0.25s ease forwards;
   }
   .main-top-hero-content-2 {
     display: none;
     animation: slideIn 0.25s ease forwards;
+    -webkit-animation: slideIn 0.25s ease forwards;
   }
   .ball-element-hero {
     animation: slideIn 0.25s ease forwards;
+    -webkit-animation: slideIn 0.25s ease forwards;
     animation-delay: 0.7s;
+  }
+}
+
+@-webkit-keyframes slideInBall {
+  0% {
+    opacity: 0;
+    filter: blur(20px);
+    position: relative;
+    top: -80px;
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0px);
+    position: relative;
+    top: 0;
+  }
+}
+
+@-webkit-keyframes slideIn {
+  0% {
+    opacity: 1;
+    position: relative;
+    top: 20px;
+  }
+  100% {
+    opacity: 1;
+    position: relative;
+    top: 0;
   }
 }
 
