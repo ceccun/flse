@@ -87,6 +87,7 @@ function gatherImports(ft = 0) {
               `FLSE: The import for "${importID}" could not be completed.\nThe server responded with ${statusCode}.`
             );
             importDec.setAttribute("registered", "failed");
+            incrementGotCounter(ft);
           }
         });
       }
@@ -118,6 +119,7 @@ function gatherImports(ft = 0) {
               `FLSE: The import for "${importID}" could not be completed.\nThe server responded with ${statusCode}.`
             );
             importDec.setAttribute("registered", "failed");
+            incrementGotCounter(ft);
           }
         });
       }
@@ -225,7 +227,6 @@ function languages(ft = 0) {
       }
     }
   }
-
   placeElems(ft);
 }
 
@@ -233,9 +234,8 @@ function placeElems(ft = 0) {
   var everyElem = document.getElementsByTagName("*");
   window["everyElemStats"] = {
     max: everyElem.length,
-    current: 0,
+    current: 1,
   };
-
   for (const elem of everyElem) {
     const tagName = elem.tagName.toLowerCase();
     if (tagName in imports) {
@@ -261,7 +261,6 @@ function incrementElemCounter(ft = 0, increment = true) {
   if (increment == true) {
     window["everyElemStats"]["current"] += 1;
   }
-  // console.log(window["everyElemStats"]);
   if (
     window["everyElemStats"]["current"] == window["everyElemStats"]["max"] ||
     ft == 0
