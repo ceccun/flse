@@ -16,7 +16,7 @@
     font-size: 50px;
     line-height: 53px;
     opacity: 0;
-    animation: slideIn 0.25s ease forwards;
+    animation: slideIn 0.25s cubic-bezier(0, 1, 0.55, 0.97) forwards;
   }
   .main-top-hero-content {
     display: flex;
@@ -42,18 +42,20 @@
   }
   .ball-element-hero {
     opacity: 0;
-    animation: slideInBall 0.4s ease forwards;
-    -webkit-animation: slideInBall 0.4s ease forwards;
+    animation: slideInBall 0.4s cubic-bezier(0, 1, 0.55, 0.97) forwards;
+    -webkit-animation: slideInBall 0.4s cubic-bezier(0, 1, 0.55, 0.97) forwards;
     animation-delay: 0.7s;
   }
   .caro-flex {
     display: flex;
     justify-content: space-between;
     align-content: stretch;
+    gap: 10px;
   }
   .caro-flex > div {
     text-align: center;
     flex-grow: 1;
+    width: 100%;
   }
 }
 
@@ -76,17 +78,17 @@
     font-size: 50px;
     line-height: 55px;
     opacity: 0;
-    animation: slideIn 0.25s ease forwards;
-    -webkit-animation: slideIn 0.25s ease forwards;
+    animation: slideIn 0.25s cubic-bezier(0, 1, 0.55, 0.97) forwards;
+    -webkit-animation: slideIn 0.25s cubic-bezier(0, 1, 0.55, 0.97) forwards;
   }
   .main-top-hero-content-2 {
     display: none;
-    animation: slideIn 0.25s ease forwards;
-    -webkit-animation: slideIn 0.25s ease forwards;
+    animation: slideIn 0.25s cubic-bezier(0, 1, 0.55, 0.97) forwards;
+    -webkit-animation: slideIn 0.25s cubic-bezier(0, 1, 0.55, 0.97) forwards;
   }
   .ball-element-hero {
-    animation: slideIn 0.25s ease forwards;
-    -webkit-animation: slideIn 0.25s ease forwards;
+    animation: slideIn 0.25s cubic-bezier(0, 1, 0.55, 0.97) forwards;
+    -webkit-animation: slideIn 0.25s cubic-bezier(0, 1, 0.55, 0.97) forwards;
     animation-delay: 0.7s;
   }
 }
