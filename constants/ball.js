@@ -1,3 +1,3 @@
 background = element.getAttribute("background");
 
-return `<div class="ball-element-hero" style="background: ${background}; width: 300px; height: 300px; border-radius: 50%;"></div>`;
+return `<img class="ball-element-hero" src="${background}" style="width: 300px; height: 300px; border-radius: 50%;" />`;

@@ -23,26 +23,62 @@
                 <h1 style="animation-delay: 0.9s; font-size: 1.5rem; font-weight: 400;"><a href="/flse/get-started">Get Started</a></h1>
             </div>
             <div class="main-top-hero-content-2">
-                <ball background="url(/flse/images/ball-hero-gradient.png) no-repeat fixed center/cover"></ball>
+                <ball background="/flse/images/ball-hero-gradient.png"></ball>
             </div>
         </div>
     </div>
     <div>
         <div class="breathing">
-            <div class="caro-flex">
+            <div class="promo-quote">
                 <div>
-                    <h1>Modular</h1>
-                    <p>FLSE makes vanilla HTML modular, for better developed sites and shorter development times. Supress frequently used code into one, generate custom elements to match your needs, and with the power of Javascript enable rich handling of every element to the maximum.</p>
+                    <h1>FLSE Brings You The Power To Get To Market Faster.</h1>
                 </div>
-                <div>
-                    <h1>Easy</h1>
-                    <p>FLSE is designed to accomodate your existing vanilla stack and designed to stay easy. Little to no additional HTML, CSS or JS knowledge is required to master the arts of FLSE. Simply learn to import, and you're good to go!</p>
-                </div>
-                <div>
-                    <h1>Reactive</h1>
-                    <p>Develop reactivity using FLSE and modules to make your </p>
+                <div class="promo-quote-quote">
+                    <p style="vertical-align: middle;">FLSE's <a style="color: black" flsestring="modulisationlocalisation">modulisation and localisation</a> engine assists you in developing sites and apps faster. Enabling you to get to market faster with FLSE compared to traditional vanilla HTML, JS and CSS.</p>
                 </div>
             </div>
+            <div class="caro-flex">
+                <caroitem title="Modular">FLSE makes vanilla HTML modular, for better developed sites and shorter development times. Supress frequently used code
+                into one, generate custom elements to match your needs, and with the power of Javascript enable rich handling of every
+                element to the maximum.</caroitem>
+                <caroitem title="Easy">FLSE is designed to accomodate your existing vanilla stack and designed to stay easy. Little to no additional HTML, CSS
+                or JS knowledge is required to master the arts of FLSE. Simply learn to import, and you're good to go!</caroitem>
+                <caroitem title="Fast">Build faster than you did before, all with the help of reusable modules, components and easy localisation built right in.</caroitem>
+            </div>
+            <div class="section" id="latest-releases">
+                <h1 style="margin-bottom: 20px;">Latest Releases</h1>
+                <div class="caro-flex">
+                    <carogh s="0">
+
+                    </carogh>
+                    <carogh s="1">
+                    
+                    </carogh>
+                    <carogh s="2">
+                    
+                    </carogh>
+                </div>
+            </div>
+
+            <link rel="stylesheet" href="/flse/constants/codemirror/codemirror.css">
+            <script src="/flse/constants/codemirror/codemirror.js"></script>
+            <div class="section">
+                <h1>Try FLSE Now!</h1>
+                <div class="code-space split-div" type="card">
+                    <div class="side">
+                        <textarea style="height: 100%;"></textarea>
+                    </div>
+                    <div class="side">
+                        <iframe frameborder="0" style="height: 100%; width: 100%"></iframe>
+                    </div>
+                    <script>
+                        var editor = CodeMirror.fromTextArea(document.getElementsByTagName("textarea")[0], {
+                            lineNumbers: true
+                        });
+                    </script>
+                </div>
+            </div>
+            <h1>FLSE brings you the power to get to market faster.</h1>
         </div>
     </div>
 
@@ -60,10 +96,13 @@
             curElem.innerText = words[indexOC + 1];
         }, 1000)
 
-        return `&lt;h1 id="${id}" style="animation-delay: 0.6s; color: #FA4B4B"&gt;Incredible&lt;/h1&gt;`
+        return `&lt;h1 id="${id}" style="animation-delay: 0.6s; color: var(--red)"&gt;Incredible&lt;/h1&gt;`
     </flsedefine>
     <flseimport src="/flse/constants/header.js" name="header" type="module" />
     <flseimport src="/flse/constants/ball.js" name="ball" type="module" />
+    <flseimport src="/flse/constants/caroitem.js" name="caroitem" type="module" />
+    <flseimport src="/flse/constants/carogH.js" name="carogh" type="module" />
     <script src="/flse/js/flse.experimental.js"></script>
+    <script src="/flse/js/index.js"></script>
 </body>
 </html>

@@ -53,9 +53,60 @@
     gap: 10px;
   }
   .caro-flex > div {
-    text-align: center;
+    text-align: left;
     flex-grow: 1;
     width: 100%;
+    padding: 20px;
+    background-color: var(--body-color);
+    border: solid 2px var(--border-color);
+    border-radius: 10px;
+    box-shadow: 0px 0px 0px rgba(0, 0, 0, 0);
+    transition: background-color 0.2s ease, border-color 0.2s ease,
+      color 0.2s ease, box-shadow 0.2s ease, transform 0.6s ease;
+  }
+  .caro-flex > div:hover {
+    border: solid 2px var(--red);
+    background-color: var(--red);
+    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
+    color: white;
+  }
+  .promo-quote-quote {
+    align-self: center;
+    border-left: solid 2px var(--border-color);
+    padding: 30px;
+  }
+  .promo-quote > div {
+    width: 100%;
+  }
+  .promo-quote {
+    display: flex;
+    justify-content: space-between;
+    align-content: stretch;
+    margin-top: 100px;
+    margin-bottom: 100px;
+  }
+
+  .split-div {
+    display: flex;
+    justify-content: space-between;
+    align-content: stretch;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px !important;
+    transition: background-color 0.2s ease, border-color 0.2s ease,
+      color 0.2s ease, box-shadow 0.2s ease, transform 0.4s ease;
+  }
+  .split-div[type="card"]:hover {
+    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
+  }
+  .split-div > .side {
+    width: 100%;
+  }
+  .section {
+    margin-top: 20px;
+    margin-bottom: 20px;
   }
 }
 
@@ -90,6 +141,40 @@
     animation: slideIn 0.25s cubic-bezier(0, 1, 0.55, 0.97) forwards;
     -webkit-animation: slideIn 0.25s cubic-bezier(0, 1, 0.55, 0.97) forwards;
     animation-delay: 0.7s;
+  }
+  .caro-flex {
+    display: block;
+  }
+  .caro-flex > div {
+    padding: 20px;
+    text-align: center;
+    background-color: var(--body-color);
+    border: solid 2px var(--border-color);
+    border-radius: 10px;
+    margin-bottom: 15px;
+    transition: background-color 0.2s ease, border-color 0.2s ease,
+      color 0.2s ease, box-shadow 0.2s ease, transform 0.6s ease;
+  }
+  .caro-flex > div:hover {
+    border: solid 2px var(--red);
+    background-color: var(--red);
+    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.15);
+    transform: scale(1.05);
+    color: white;
+  }
+  .promo-quote {
+    margin-top: 60px;
+    margin-bottom: 60px;
+  }
+  .promo-quote-quote {
+    align-self: center;
+    border-top: solid 2px var(--border-color);
+    margin-top: 20px;
+    padding: 20px;
+  }
+  .section {
+    margin-top: 20px;
+    margin-bottom: 20px;
   }
 }
 

@@ -2,6 +2,8 @@
 
 :root {
   --body-color: #f3f4fd;
+  --border-color: #dfe1f3;
+  --red: rgb(255, 68, 68);
 }
 
 body {
@@ -67,5 +69,32 @@ a {
 @media only screen and (min-width: 769px) {
   .breathing {
     margin: 40px 10% 0 10%;
+  }
+}
+
+.skel {
+  /* background-color: var(--skel-color); */
+  border-radius: 5px;
+  margin-bottom: 5px;
+  background-color: rgba(0, 0, 0, 0.3);
+  /* background: linear-gradient(
+    270deg,
+    var(--skel-color) 25%,
+    var(--body-color) 50%,
+    var(--skel-color) 75%
+  ); */
+  animation: skelLite 1s linear infinite;
+  background-size: 300% 300%;
+}
+
+@keyframes skelLite {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
   }
 }
