@@ -51,10 +51,10 @@
         const id = btoa(Math.random());
 
         setInterval(() => {
-            const words = ["Incredible", "Amazing", "Fabulous"];
+            const words = ["Incredible", "Amazing", "Fabulous", "Stunning", "Creative", "Beautiful", "Ambitious", "Awesome"];
             const curElem = document.getElementById(id);
             let indexOC = words.indexOf(curElem.innerText);
-            if (indexOC == 2) {
+            if (indexOC == 7) {
                 indexOC = -1;
             }
             curElem.innerText = words[indexOC + 1];
