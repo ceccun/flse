@@ -291,7 +291,6 @@ function addTriggers(ft) {
     } else {
       if (settings["lastHTML"] != document.body.innerHTML) {
         gatherImports(0);
-        console.log("JHDIOH");
       }
       settings["lastHTML"] = document.body.innerHTML;
     }
