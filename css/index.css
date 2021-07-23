@@ -30,7 +30,7 @@
   .main-top-hero-content-1 {
     position: relative;
     bottom: 10px;
-    left: 80px;
+    right: -80px;
     z-index: 1;
   }
   .main-top-hero-content-2 {
@@ -98,13 +98,13 @@
     opacity: 0;
     filter: blur(20px);
     position: relative;
-    top: -80px;
+    transform: translateY(-80px);
   }
   100% {
     opacity: 1;
     filter: blur(0px);
     position: relative;
-    top: 0;
+    transform: translateY(0px);
   }
 }
 
@@ -112,12 +112,12 @@
   0% {
     opacity: 1;
     position: relative;
-    top: 20px;
+    transform: translateY(20px);
   }
   100% {
     opacity: 1;
     position: relative;
-    top: 0;
+    transform: translateY(0px);
   }
 }
 
@@ -126,13 +126,13 @@
     opacity: 0;
     filter: blur(20px);
     position: relative;
-    top: -80px;
+    transform: translateY(-80px);
   }
   100% {
     opacity: 1;
     filter: blur(0px);
     position: relative;
-    top: 0;
+    transform: translateY(0px);
   }
 }
 
@@ -140,11 +140,11 @@
   0% {
     opacity: 1;
     position: relative;
-    top: 20px;
+    transform: translateY(20px);
   }
   100% {
     opacity: 1;
     position: relative;
-    top: 0;
+    transform: translateY(0px);
   }
 }
