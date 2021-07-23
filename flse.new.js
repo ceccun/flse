@@ -237,20 +237,22 @@ function placeElems(ft = 0) {
     current: 1,
   };
   for (const elem of everyElem) {
-    const tagName = elem.tagName.toLowerCase();
-    if (tagName in imports) {
-      if (imports[tagName]["type"] == "module") {
-        elem.outerHTML = imports[tagName]["contents"](elem);
+    setTimeout(() => {
+      const tagName = elem.tagName.toLowerCase();
+      if (tagName in imports) {
+        if (imports[tagName]["type"] == "module") {
+          elem.outerHTML = imports[tagName]["contents"](elem);
+        }
+        if (imports[tagName]["type"] == "component") {
+          elem.outerHTML = imports[tagName]["contents"];
+        }
       }
-      if (imports[tagName]["type"] == "component") {
-        elem.outerHTML = imports[tagName]["contents"];
+      if (settings["cssVar"] == true) {
+        incrementElemCounter(1);
+      } else {
+        incrementElemCounter(ft);
       }
-    }
-    if (settings["cssVar"] == true) {
-      incrementElemCounter(1);
-    } else {
-      incrementElemCounter(ft);
-    }
+    }, 0);
   }
   if (window["everyElemStats"]["max"] == 0) {
     incrementElemCounter(ft, false);
@@ -279,11 +281,13 @@ function incrementElemCounter(ft = 0, increment = true) {
 }
 
 function addTriggers(ft) {
+  console.log("d");
   settings["cssVar"] = false;
   setInterval(() => {
     if (ft == 1) {
       settings["lastHTML"] = document.body.innerHTML;
       ft = 0;
+      placeElems(0);
     } else {
       if (settings["lastHTML"] != document.body.innerHTML) {
         gatherImports(0);
