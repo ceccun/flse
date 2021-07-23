@@ -8,6 +8,13 @@
   background-position-x: right;
 }
 
+.dark-section {
+  background-color: rgb(31, 31, 31);
+}
+.dark-section * {
+  color: white;
+}
+
 @media only screen and (min-width: 769px) {
   .main-top-hero-content > div {
     width: 50%;
@@ -74,10 +81,11 @@
   .promo-quote-quote {
     align-self: center;
     border-left: solid 2px var(--border-color);
-    padding: 30px;
+    padding: 25px;
   }
   .promo-quote > div {
     width: 100%;
+    padding: 25px;
   }
   .promo-quote {
     display: flex;
@@ -105,8 +113,8 @@
     width: 100%;
   }
   .section {
-    margin-top: 20px;
-    margin-bottom: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
   }
 }
 
@@ -173,8 +181,8 @@
     padding: 20px;
   }
   .section {
-    margin-top: 20px;
-    margin-bottom: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
   }
 }
 
