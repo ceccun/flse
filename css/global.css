@@ -32,21 +32,22 @@ a {
 .header-inner {
   border-bottom: solid 1px black;
   display: flex;
+  /* grid-template-columns: auto auto auto; */
   justify-content: space-between;
+  width: 90%;
   margin: 0 5% 0 5%;
   height: 100%;
 }
 
 .header-inner > div {
+  height: 80px;
   display: flex;
   gap: 25px;
 }
 
-.header-inner > div > a {
-  display: inline-block;
-  align-self: center;
-
+.header-inner a {
   color: black;
+  align-self: center;
 }
 
 a {
