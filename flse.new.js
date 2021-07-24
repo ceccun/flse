@@ -180,7 +180,7 @@ function gatherImports(ft = 0) {
       if (type == "module") {
         imports[name] = {
           type: type,
-          contents: new Function("element", importDec.innerText),
+          contents: new Function("element", importDec.innerHTML),
         };
         importDec.setAttribute("registered", "registered");
         incrementGotCounter(ft);
