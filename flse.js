@@ -1,320 +1,299 @@
-/* Fast Layout and Substratum Engine
-* Developed by Ejaz Ali @ Stella Group
-* Version 1.6.0.5 Stable
-* Saving Developers Time and Effort
-* Open Sourced Web Development ♥ */
+/* 
+FLSE 2.0 210721
+Developed and engineered for the sites of tomorrow.
+Stable Channel
+*/
 
-var settings = {};var gvar = {};var editedelems = {};var slaps = {};var registered={};window["flsedetec"]={"v":"1.6.0.5", "channel":"stable"};var custcomponents = [];var importNames = []; var modules = [];var flseModules = {}
-setTimeout(rePositionPage(), 0);
-setTimeout(bootstrapFLSE(), 0);
+const flsedetec = { v: "2", channel: "stable" };
+const settings = {};
+var imports = {};
+try {
+  flsestrings;
+} catch (error) {
+  var flsestrings = {};
+}
+flseBootstrap();
 
-function bootstrapFLSE(){
-    settings["firstInitOc"] = 0;
-    var flseworkarea = document.createElement('FLSE');
-    flseworkarea.innerHTML = `
-        <style>
-        publicflse, flse, cservice, locale{
+function flseBootstrap() {
+  settings["longLan"] = navigator.language.replace("-", "_");
+  if (settings["longLan"].includes("_")) {
+    settings["shortLan"] = settings["longLan"].split("_")[0];
+  }
+
+  const bodyRemovalCSS = document.createElement("style");
+  bodyRemovalCSS.innerHTML = `
+        body, flseimport, flsedefine {
             display: none;
         }
-        </style>
-    `;
-    document.body.appendChild(flseworkarea);
-    var publicflseworkarea = document.createElement('publicFLSE');
-    document.body.appendChild(publicflseworkarea);
-    setTimeout(function (){ window.setInterval(checkPage, 10)}, 1);
+        `;
+  bodyRemovalCSS.setAttribute("id", "flseBodyDry");
+  document.body.appendChild(bodyRemovalCSS);
+  settings["cssVar"] = true;
+  gatherImports(1);
 }
 
+function gatherImports(ft = 0) {
+  var ebimports = document.getElementsByTagName("flseimport");
+  var ebdefine = document.getElementsByTagName("flsedefine");
+  window["importStats"] = {
+    max: ebimports.length + ebdefine.length,
+    current: 0,
+  };
 
+  for (const importDec of ebimports) {
+    if (
+      importDec.getAttribute("registered") == "registered" ||
+      importDec.getAttribute("registered") == "registering" ||
+      importDec.getAttribute("registered") == "failed"
+    ) {
+      continue;
+    } else {
+      const importID = btoa(Math.random());
+      const type = importDec.getAttribute("type");
+      const name = importDec.getAttribute("name");
+      const src = importDec.getAttribute("src");
+      importDec.setAttribute("ranID", importID);
+      importDec.setAttribute("registered", "registering");
 
-function checkPage(){
-    if (gvar["pagecontents"] != document.getElementsByTagName("html")[0].innerHTML){
-        refreshFLSESettings();
-    }
-    if (gvar["width"] != window.innerWidth){
-        rePositionPage();
-    }
-    gvar["width"] = window.innerWidth;
-    gvar["pagecontents"] = document.getElementsByTagName("html")[0].innerHTML;
-}
+      if (type == null) {
+        console.error(
+          `FLSE: The import for "${importID}" could not be completed.\nThere is no type.`
+        );
+        importDec.setAttribute("registered", "failed");
+        continue;
+      }
+      if (src == null) {
+        console.error(
+          `FLSE: The import for "${importID}" could not be completed.\nThere is no source location.`
+        );
+        importDec.setAttribute("registered", "failed");
+        continue;
+      }
 
-function refreshFLSESettings(){
-    /* Native Components */
-              var components = document.getElementsByTagName("flseimport");
-              for(const item of components){
-                  if(item.getAttribute("registered") == null){
-                  item.setAttribute("registered", "registering");
-                  importNames.push(item.getAttribute("name").toUpperCase());
-                  if(item.getAttribute("type") == "components"){
-                  fetch(item.getAttribute("src"), { importance: "high" }).then((response)=>{
-                      if(response.status == 200){
-                          response.json().then((components)=>{
-                            // components.forEach((item, index)=>{
-                                // custcomponents.push(item);
-                            // })
-                            custcomponents = custcomponents.concat(components)
-                            item.setAttribute("registered", "");
-                          })
-                      }else{
-                          console.error("FLSE: Could not set up import \"" + item.getAttribute("src") + "\: The source file came back as a " + response.status + ".");
-                          item.setAttribute("registered", "fail");
-                      }
-                  });
-                }
-                if(item.getAttribute("type") == "component"){
-                    fetch(item.getAttribute("src"), { importance: "high" }).then((response)=>{
-                        if(response.status == 200){
-                            response.text().then((component)=>{
-                                if (item.getAttribute("name") != null){
-                                custcomponents.push({
-                                    "tag": item.getAttribute("name"),
-                                    "value": component
-                                });
-                                item.setAttribute("registered", "");
-                            } else{
-                                console.error("FLSE: Could not set up import \"" + item.getAttribute("src") + "\": No name was specified, nor did the source file define them.");
-                                item.setAttribute("registered","fail");
-                            }
-                            })
-                        } else { 
-                            console.error("FLSE: Could not set up import \"" + item.getAttribute("src") + "\: The source file came back as a " + response.status + ".");
-                            item.setAttribute("registered", "fail");
-                        }
-
-                    })
-                }
-                // if (item.getAttribute("type") == "slap") {
-                //     fetch(item.getAttribute("src"), { importance: "high" }
-                //     ).then((response)=>{
-                //         if(response.status.toString().startsWith("2")){
-                //             try { response.json().then((slap) => {
-                //                 slaps[item.getAttribute("name")] = slap;
-                //             });
-                //          } catch(error) {
-                //              console.error(`FLSE: Could not parse "${item.getAttribute("src")}".`)
-                //          }
-                //         } else {
-                //             console.error("FLSE: Could not set up import \"" + item.getAttribute("src") + "\": Returned a " + response.status + ".");
-                //             item.setAttribute("registered","fail");
-                //         }
-                //     })
-                // }
-                if (item.getAttribute("type") == "module") {
-                    fetch(item.getAttribute("src"), { importance: "high" }).then((response) => {
-                        if (response.status == 200) {
-                            response.text().then((moduledata) => {
-                                checkModule(moduledata, item.getAttribute("name"));
-                                // var moduleElem = document.createElement("script");
-                                flseModules[item.getAttribute("name")] = new Function("element", moduledata);
-                                modules.push(item.getAttribute("name"));
-                                item.setAttribute("registered", "");
-                            });
-                        } else {
-                            console.error("FLSE: Could not set up import \"" + item.getAttribute("src") + "\: The source file came back as a " + response.status + ".");
-                            item.setAttribute("registered", "fail");
-                        }
-                    });
-                }
-
-
-              }}
-            /* Actually putting custom components on page */
-            var allelements = document.getElementsByTagName("*");
-            setTimeout(() => {
-                for (const elems of allelements){
-                    if (elems in importNames) {
-                        elems.setAttribute("style", "display: none;");
-                    }
-                setTimeout(() => {
-                    custcomponents.forEach((item,index)=>{
-                    if (elems.tagName == item["tag"].toUpperCase()){
-                        elems.outerHTML = item["value"];
-                    }
-                });
-            }, 0);
-
-                setTimeout(() => {
-                    modules.forEach((item, index) => {
-                        // console.log(elems.tagName);
-                        if (elems.tagName == item.toUpperCase()) {
-                            // console.log(elementAttributes);
-                            try { elems.outerHTML = flseModules[item](elems); } catch(error) {
-                                console.error(`FLSE: An error occured internally with the module "${item}"; see below: \n\n ${error}`)
-                            }
-                        }
-                    });
-                }, 0);
-            }
-        }, 0);
-
-            function getAttributes (el) {
-                return Array.from(el.attributes)
-                    .map(a => [a.name, a.value])
-                    .reduce((acc, attr) => {
-                    acc[attr[0]] = attr[1]
-                        return acc
-            }, {})
-        }
-            // custcomponents.forEach((item, index)=>{
-            //     var invcomponents = document.getElementsByTagName(item["tag"]);
-            //     console.log(invcomponents);
-            //     for(const invitem of invcomponents){
-            //         invitem.outerHTML = item["value"];
-            //         }
-            // });
-    /* Components */
-          var components = document.getElementsByTagName("flsehtmlcomponent");
-      for(const item of components){
-          if (item.getAttribute("registered") == null){
-              item.setAttribute("registered", "registering");
-              fetch(item.getAttribute("src")).then((response)=>{ 
-                  if(response.status.toString().startsWith("2")){
-                      response.text().then((text)=>{ 
-                          item.insertAdjacentHTML('beforeend', text);
-                          item.setAttribute("registered", "");
-                          console.warn("FLSE: flsehtmlcomponent is being deprecated in favour of FLSE import and FLSE custom tags. flsehtmlcomponent is less stable, slower and not as advanced as FLSE import and FLSE custom tags.");
-                        })
-                    }else{
-                        console.error("FLSE: Could not load HTMLComponent \"" + item.getAttribute("src") + "\: The result came back as a " + response.status + " but the component was registered anyways.");
-                        item.setAttribute("registered", "error");
-                    }
-                });
+      if (type == "component") {
+        fetch(src).then((response) => {
+          var statusCode = response.status.toString();
+          if (statusCode.startsWith("2")) {
+            response.text().then((data) => {
+              imports[name] = {
+                type: type,
+                contents: data,
+              };
+              importDec.setAttribute("registered", "registered");
+              incrementGotCounter(ft);
+            });
+          } else {
+            console.error(
+              `FLSE: The import for "${importID}" could not be completed.\nThe server responded with ${statusCode}.`
+            );
+            importDec.setAttribute("registered", "failed");
+            incrementGotCounter(ft);
           }
-      }
-      
-    /* Locales */
-    
-    if (document.getElementsByTagName('locale')[0] != undefined){
-        settings["locale"] = document.getElementsByTagName('locale')[0].getAttribute("value");
-    } else{
-        settings["locale"] = navigator.language;
-    }
-
-    
-    /* CServices */
-    var target = document.getElementsByTagName('publicFLSE')[0];
-    var cservices = document.getElementsByTagName("cservice");
-    for (const item of cservices) {
-        if (item.getAttribute("content") == 'script'){
-            if(document.getElementById('flseS_' + item.getAttribute('url')) == undefined){
-            var cservicescript = document.createElement('script');
-            cservicescript.setAttribute("src", item.getAttribute('url'));
-            cservicescript.setAttribute("id", 'flseS_' + item.getAttribute('url'));
-            target.appendChild(cservicescript);
-            }
-        }
-        if (item.getAttribute("content") == 'theme'){
-            if(document.getElementById('flseT_' + item.getAttribute('url')) == undefined){
-            var cservicetheme = document.createElement('link');
-            cservicetheme.setAttribute("href", item.getAttribute('url'));
-            cservicetheme.setAttribute("href", item.getAttribute('url'));
-            cservicetheme.setAttribute("id", 'flseT_' + item.getAttribute('url'));
-            cservicetheme.setAttribute("rel", 'stylesheet');
-            target.appendChild(cservicetheme);
-            }
-        }
+        });
       }
 
-      /* Locale Handler */
-      var customstringelements = document.querySelectorAll("[flsestring]");
-      var language = settings["locale"].split("-")[0];
-      var languagewlocale = settings["locale"];
-      customstringelements.forEach((item, index) => {
-          var stlf = item.getAttribute("flsestring");
-          try{
-          if (flsestrings != undefined){
-              if (flsestrings[stlf][language] != undefined){
-              item.innerHTML = flsestrings[stlf][language];
-              } else{
-                  item.innerHTML = flsestrings[stlf]["default"];
+      if (type == "components") {
+        fetch(src).then((response) => {
+          var statusCode = response.status.toString();
+          if (statusCode.startsWith("2")) {
+            response.text().then((data) => {
+              try {
+                var dataParsed = JSON.parse(data);
+                for (const arrElement of dataParsed) {
+                  imports[arrElement["tag"]] = {
+                    type: "component",
+                    contents: arrElement["value"],
+                  };
+                }
+                importDec.setAttribute("registered", "registered");
+              } catch (error) {
+                importDec.setAttribute("registered", "failed");
+                console.error(
+                  `FLSE: The import for "${importID}" could not be completed.\nThe source file is not encoded correctly.`
+                );
               }
-              if (flsestrings[stlf][languagewlocale] != undefined){
-                item.innerHTML = flsestrings[stlf][languagewlocale];
-            }
+              incrementGotCounter(ft);
+            });
+          } else {
+            console.error(
+              `FLSE: The import for "${importID}" could not be completed.\nThe server responded with ${statusCode}.`
+            );
+            importDec.setAttribute("registered", "failed");
+            incrementGotCounter(ft);
           }
-        } catch(error){
-            console.error("FLSE: \"" + item.getAttribute("flsestring") + "\" or \"" + language + "\" and \"default\" is not defined.");
-        }
-      });
+        });
+      }
 
-      /* Slap Handler */
-    //   var slappableElements = document.querySelectorAll("[flseslap]");
-    //   slappableElements.forEach((item, index) => {
-    //       var slapAttr = item.getAttribute("flseslap");
-    //       console.log(slapAttr.split('{=>}'));
-    //       console.log(slaps[slapAttr.replace('{=>}','.')]);
-    //   });
+      if (type == "module") {
+        fetch(src).then((response) => {
+          var statusCode = response.status.toString();
+          if (statusCode.startsWith("2")) {
+            response.text().then((data) => {
+              imports[name] = {
+                type: type,
+                contents: new Function("element", data),
+              };
+              importDec.setAttribute("registered", "registered");
+              incrementGotCounter(ft);
+            });
+          } else {
+            console.error(
+              `FLSE: The import for "${importID}" could not be completed.\nThe server responded with ${statusCode}.`
+            );
+            importDec.setAttribute("registered", "failed");
+          }
+        });
+      }
+    }
+  }
 
-      rePositionPage();
+  for (const importDec of ebdefine) {
+    if (
+      importDec.getAttribute("registered") == "registered" ||
+      importDec.getAttribute("registered") == "registering" ||
+      importDec.getAttribute("registered") == "failed"
+    ) {
+      continue;
+    } else {
+      const importID = btoa(Math.random());
+      const type = importDec.getAttribute("type");
+      const name = importDec.getAttribute("name");
+      importDec.setAttribute("ranID", importID);
+
+      if (type == null) {
+        console.error(
+          `FLSE: The import for "${importID}" could not be completed.\nThere is no type.`
+        );
+        importDec.setAttribute("registered", "failed");
+        continue;
+      }
+
+      if (type == "component") {
+        imports[name] = {
+          type: type,
+          contents: importDec.innerHTML,
+        };
+        importDec.setAttribute("registered", "registered");
+        incrementGotCounter(ft);
+      }
+
+      if (type == "module") {
+        imports[name] = {
+          type: type,
+          contents: new Function("element", importDec.innerHTML),
+        };
+        importDec.setAttribute("registered", "registered");
+        incrementGotCounter(ft);
+      }
+    }
+  }
+
+  if (window["importStats"]["max"] == 0 || ft == 0) {
+    incrementGotCounter(ft, false);
+  }
 }
 
+function incrementGotCounter(ft = 0, increment = true) {
+  if (increment == true) {
+    window["importStats"]["current"] += 1;
+  }
 
-function rePositionPage(){
-    gvar["mobile"] = Math.min(window.innerWidth, window.innerWidth) < 768;
-    if (gvar["mobile"] == true){
-        var mobileonly = document.getElementsByTagName("flsemobileonly");
-        var mobilehide = document.getElementsByTagName("flsemobilehide");
-        for (const item of mobileonly){
-            item.setAttribute("style","");
-        }
-        for (const item of mobilehide){
-            item.setAttribute("style","display: none;");
-        }
-    } else{
-        var mobileonly = document.getElementsByTagName("flsemobileonly");
-        var mobilehide = document.getElementsByTagName("flsemobilehide");
-        for (const item of mobileonly){
-            item.setAttribute("style","display: none;");
-        }
-        for (const item of mobilehide){
-            item.setAttribute("style","");
-        }
-    }
-    var customstylesheetelements = document.querySelectorAll("[flsedynstylesheet]");
-    customstylesheetelements.forEach((item, index) => {
-        const linkwithdash = item.getAttribute("href");
-        const linkwithoutdash = linkwithdash.split("-")[0];
-        if (window.innerWidth > 768){
-            item.setAttribute("href", linkwithoutdash + "-d.css");
-        } else{
-            item.setAttribute("href", linkwithoutdash + "-m.css");
-        }
-    });
-    if (settings["firstInitOc"] == 0){
-        try{ flseLoadcall() }catch(error){}
-        settings["firstInitOc"] = 1;
-    }
-	try{ flseUpdate() }catch(error){}
+  if (
+    window["importStats"]["current"] == window["importStats"]["max"] ||
+    ft == 0
+  ) {
+    languages(ft);
+  }
 }
 
-const flseErrorHandler = (error, severity) => {
-    // Nothing here for now
+function placeLang() {}
+
+function languages(ft = 0) {
+  var legacyLanElem = document.querySelectorAll("[flsestring]");
+  for (const item of legacyLanElem) {
+    var targetLan = item.getAttribute("flsestring");
+    if (item.getAttribute("registered") != "registered") {
+      item.setAttribute("registered", "registered");
+      if (flsestrings[targetLan]["default"] != null) {
+        item.innerHTML = flsestrings[targetLan]["default"];
+      }
+      if (flsestrings[targetLan][settings["longLan"]] != null) {
+        item.innerHTML = flsestrings[targetLan][settings["longLan"]];
+      }
+      if (settings["shortLan"] != null) {
+        if (flsestrings[targetLan][settings["shortLan"]] != null) {
+          item.innerHTML = flsestrings[targetLan][settings["shortLan"]];
+        }
+      }
+    }
+  }
+  placeElems(ft);
 }
 
-const flseStringsNSettingsHandler = (element) => {
-
+function placeElems(ft = 0) {
+  var everyElem = document.getElementsByTagName("*");
+  window["everyElemStats"] = {
+    max: everyElem.length,
+    current: 1,
+  };
+  for (const elem of everyElem) {
+    setTimeout(() => {
+      const tagName = elem.tagName.toLowerCase();
+      if (tagName in imports) {
+        if (imports[tagName]["type"] == "module") {
+          elem.outerHTML = imports[tagName]["contents"](elem);
+        }
+        if (imports[tagName]["type"] == "component") {
+          elem.outerHTML = imports[tagName]["contents"];
+        }
+      }
+      if (settings["cssVar"] == true) {
+        incrementElemCounter(1);
+      } else {
+        incrementElemCounter(ft);
+      }
+    }, 0);
+  }
+  if (window["everyElemStats"]["max"] == 0) {
+    incrementElemCounter(ft, false);
+  }
 }
 
-const checkModule = (moduleData, moduleName) => {
-    var safe = 1;
-    const dataLower = moduleData.toLowerCase();
-    if (dataLower.includes("eval")) {
-        console.warn(`FLSE: The module "${moduleName}" may contain potentially harmful code that may pose security risks to this page and any data transferred between it.`);
-        safe = 0;
+function incrementElemCounter(ft = 0, increment = true) {
+  if (increment == true) {
+    window["everyElemStats"]["current"] += 1;
+  }
+  if (
+    window["everyElemStats"]["current"] == window["everyElemStats"]["max"] ||
+    ft == 0
+  ) {
+    if (ft == 1) {
+      document.getElementById("flseBodyDry").innerHTML = `
+      flseimport, flsedefine {
+        display: none;
+        transition: none;
+        animation: none;
+      }
+      `;
+      addTriggers(ft);
     }
-    if (dataLower.includes(".getelementbyid") || dataLower.includes(".getelementsbyclassname") || dataLower.includes(".getelementsbytagname")) {
-         console.warn(`FLSE: The module "${moduleName}" contains a direct reference to an element that could potentially be used to phish data outbound this page.`);
-         safe = 0;
-    }
-     if ((dataLower.includes("script") && dataLower.includes("createElement")) || dataLower.includes("<script>") || dataLower.includes("</script>")) {
-         console.warn(`FLSE: The module "${moduleName}" contains an injection to inline or external scripts that could be used to potentially phish data outbound this page.`);
-         safe = 0;
-    }
-    if (dataLower.includes("fetch") || dataLower.includes("xmlhttprequest")) {
-        console.warn(`FLSE: The module "${moduleName}" may make requests to external sources, which could be used to phish data outbound this page.`);
-        safe = 0; 
-    }
+  }
+}
 
-    if (safe == 0) {
-        console.error("FLSE: There are critical messages being displayed in the Warnings log.");
+function addTriggers(ft) {
+  console.log("d");
+  settings["cssVar"] = false;
+  setInterval(() => {
+    if (ft == 1) {
+      settings["lastHTML"] = document.body.innerHTML;
+      ft = 0;
+      placeElems(0);
+    } else {
+      if (settings["lastHTML"] != document.body.innerHTML) {
+        gatherImports(0);
+        console.log("JHDIOH");
+      }
+      settings["lastHTML"] = document.body.innerHTML;
     }
+  }, 10);
 }
