@@ -282,7 +282,6 @@ function incrementElemCounter(ft = 0, increment = true) {
 }
 
 function addTriggers(ft) {
-  console.log("d");
   settings["cssVar"] = false;
   setInterval(() => {
     if (ft == 1) {
@@ -292,7 +291,6 @@ function addTriggers(ft) {
     } else {
       if (settings["lastHTML"] != document.body.innerHTML) {
         gatherImports(0);
-        console.log("JHDIOH");
       }
       settings["lastHTML"] = document.body.innerHTML;
     }
