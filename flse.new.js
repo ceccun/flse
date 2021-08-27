@@ -1,10 +1,10 @@
 /* 
-FLSE 2.0 210721
+FLSE 2.0.2 270821
 Developed and engineered for the sites of tomorrow.
 Edge Channel
 */
 
-const flsedetec = { v: "2", channel: "edge" };
+const flsedetec = { v: "2.0.2", channel: "edge" };
 const settings = {};
 var imports = {};
 try {
@@ -281,17 +281,21 @@ function incrementElemCounter(ft = 0, increment = true) {
 }
 
 function addTriggers(ft) {
-  console.log("d");
   settings["cssVar"] = false;
   setInterval(() => {
+    try {
+      flseUpdate();
+    } catch (e) {}
     if (ft == 1) {
       settings["lastHTML"] = document.body.innerHTML;
       ft = 0;
+      try {
+        flseLoadcall();
+      } catch (e) {}
       placeElems(0);
     } else {
       if (settings["lastHTML"] != document.body.innerHTML) {
         gatherImports(0);
-        console.log("JHDIOH");
       }
       settings["lastHTML"] = document.body.innerHTML;
     }
