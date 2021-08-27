@@ -1,10 +1,10 @@
 /* 
-FLSE 2.0.1 040821
+FLSE 2.0.2 270821
 Developed and engineered for the sites of tomorrow.
 Stable Channel
 */
 
-const flsedetec = { v: "2.0.1", channel: "stable" };
+const flsedetec = { v: "2.0.2", channel: "stable" };
 const settings = {};
 var imports = {};
 try {
@@ -129,7 +129,6 @@ function gatherImports(ft = 0) {
           var statusCode = response.status.toString();
           if (statusCode.startsWith("2")) {
             response.text().then((data) => {
-              checkModule(data, name);
               imports[name] = {
                 type: type,
                 contents: new Function("element", data),
@@ -284,9 +283,15 @@ function incrementElemCounter(ft = 0, increment = true) {
 function addTriggers(ft) {
   settings["cssVar"] = false;
   setInterval(() => {
+    try {
+      flseUpdate();
+    } catch (e) {}
     if (ft == 1) {
       settings["lastHTML"] = document.body.innerHTML;
       ft = 0;
+      try {
+        flseLoadcall();
+      } catch (e) {}
       placeElems(0);
     } else {
       if (settings["lastHTML"] != document.body.innerHTML) {
@@ -295,51 +300,4 @@ function addTriggers(ft) {
       settings["lastHTML"] = document.body.innerHTML;
     }
   }, 10);
-}
-
-function checkModule(moduleData, moduleName) {
-  var safe = 1;
-  const dataLower = moduleData.toLowerCase();
-  if (dataLower.includes("eval")) {
-    console.warn(
-      `FLSE: The module "${moduleName}" may contain potentially harmful code that may pose security risks to this page and any data transferred between it.
-      Details: Real-time translation (eval).`
-    );
-    safe = 0;
-  }
-  if (
-    dataLower.includes(".getelementbyid") ||
-    dataLower.includes(".getelementsbyclassname") ||
-    dataLower.includes(".getelementsbytagname")
-  ) {
-    console.warn(
-      `FLSE: The module "${moduleName}" contains a direct reference to an element that could potentially be used to phish data outbound this page.
-      Details: Target elements via IDs, class names, tag names. (getElem)`
-    );
-    safe = 0;
-  }
-  if (
-    (dataLower.includes("script") && dataLower.includes("createElement")) ||
-    dataLower.includes("<script>") ||
-    dataLower.includes("</script>")
-  ) {
-    console.warn(
-      `FLSE: The module "${moduleName}" contains an injection to inline or external scripts that could be used to potentially phish data outbound this page.
-      Details: Script Injection`
-    );
-    safe = 0;
-  }
-  if (dataLower.includes("fetch") || dataLower.includes("xmlhttprequest")) {
-    console.warn(
-      `FLSE: The module "${moduleName}" may make requests to external sources, which could be used to phish data outbound this page.
-      Details: External network requests. (fetch, XMLHttpRequest)`
-    );
-    safe = 0;
-  }
-
-  if (safe == 0) {
-    console.error(
-      "FLSE: There are critical messages being displayed in the Warnings log."
-    );
-  }
 }
