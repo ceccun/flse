@@ -1,5 +1,5 @@
 /* 
-FLSE 2.0.3 040921
+FLSE 2.0.4 240921
 Developed and engineered for the sites of tomorrow.
 Stable Channel
 */
@@ -325,7 +325,7 @@ function checkModule(moduleData, moduleName) {
     safe = 0;
   }
   if (
-    (dataLower.includes("script") && dataLower.includes("createElement")) ||
+    (dataLower.includes("script") && dataLower.includes("createelement")) ||
     dataLower.includes("<script>") ||
     dataLower.includes("</script>")
   ) {
