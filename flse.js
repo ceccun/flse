@@ -7,7 +7,12 @@ Edge Channel
 const flsedetec = { v: "2.0.4", channel: "edge" };
 const settings = {};
 var imports = {};
+
+var packages = {};
+var packageRay = {};
+
 var environments = {};
+
 var flseDebug = {
   log: (input) => {
     console.log(`FLSE: ${input}`) 
@@ -168,10 +173,11 @@ function gatherImports(ft = 0) {
           if (statusCode.startsWith("2")) {
             response.text().then((data) => {
               const temporaryFunc = new Function(data);
-              temporaryFunc().foreach((item) => {
+              temporaryFunc().forEach((item) => {
+                packageRay[item.name] = importID;
                 imports[item.name] = {
                   type: type,
-                  contents: new Function("environment", item),
+                  contents: item,
                 };
               });
               flseDebug.warn(`Packages are not checked for security at the moment and could potentially not be in the future. Develop and test smartly.`);
@@ -296,6 +302,16 @@ function placeElems(ft = 0) {
         if (imports[tagName]["type"] == "component") {
           elem.outerHTML = imports[tagName]["contents"];
         }
+        if (imports[tagName]["type"] == "package") {
+          var pacRay = elem.getAttribute("flseenv");
+          if (pacRay == null) {
+            pacRay = packageRay[tagName];
+          }
+          if (environments[pacRay] == undefined) {
+            environments[pacRay] = new environmentManager(pacRay);
+          }
+          elem.outerHTML = `<div flsepkg="${tagName}" flseenv="${pacRay}"></div>`
+        }
       }
       if (settings["cssVar"] == true) {
         incrementElemCounter(1);
@@ -304,6 +320,17 @@ function placeElems(ft = 0) {
       }
     }, 0);
   }
+
+  Object.keys(environments).forEach((key) => {
+    environments[key]["elements"] = document.querySelectorAll(`[flseenv="${key}"]`);
+
+    environments[key]["elements"].forEach((item) => {
+      item.innerHTML = imports[item.getAttribute("flsepkg")].contents(environments[key]);
+    })
+  });
+
+  
+
   if (window["everyElemStats"]["max"] == 0) {
     incrementElemCounter(ft, false);
   }
@@ -401,9 +428,10 @@ function checkModule(moduleData, moduleName) {
 
 
 class environmentManager {
-  constructor() {
-    this.elements = [];
+  constructor(id) {
+    this.environmentID = id;
     this.locals = {};
+    this.elements = [];
     flseDebug.debug("Environments bundled with packages are likely to see encryption being added in an Edge build sometime this year.")
   }
 
